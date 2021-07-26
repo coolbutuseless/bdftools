@@ -10,7 +10,9 @@ bdf_print_sample(
   width = NULL,
   wrap = TRUE,
   trim = TRUE,
-  line_height = NULL
+  line_height = NULL,
+  zero = " ",
+  one = "#"
 )
 }
 \arguments{
@@ -33,6 +35,8 @@ the text is wrapped.  If \code{line_height} is NULL, then use the pixel size
 speficied in the font.  You may wish to set a value here if you to
 ensure ascenders/descenders do not overlap on subsequent lines, or just
 to space out the text a bit more.}
+
+\item{zero, one}{characters to use to represent zero and one}
 }
 \description{
 Print sample text to screen

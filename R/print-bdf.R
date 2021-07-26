@@ -6,11 +6,12 @@
 #'
 #' @param x bdf font object as returned by \code{read_bdf()}
 #' @param text Example string to output to console in this font. Default: "Handgloves"
+#' @param zero,one characters to use to represent zero and one
 #' @param ... ignored
 #'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-print.bdf <- function(x, text = 'Handgloves', ...) {
+print.bdf <- function(x, text = 'Handgloves', zero = ' ', one = '#', ...) {
   # print(x$font_info)
   info <- x$font_info
 
@@ -20,7 +21,7 @@ print.bdf <- function(x, text = 'Handgloves', ...) {
   res <- paste(nn, unlist(info), sep="=", collapse = ", ")
   cat(res, "\n\n")
 
-  bdf_print_sample(x, text)
+  bdf_print_sample(x, text, zero = zero, one = one)
 
   invisible(x)
 }
@@ -30,18 +31,21 @@ print.bdf <- function(x, text = 'Handgloves', ...) {
 #' Print a binary matrix to the terminal
 #'
 #' @param mat matrix of 0/1 values
+#' @param zero,one characters to use to represent zero and one
 #'
 #' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-print_binary_matrix <- function(mat, trim = TRUE) {
+print_binary_matrix <- function(mat, trim = TRUE, zero = ' ', one = '#') {
+
+  stopifnot(nchar(zero) == nchar(one))
 
   width <- getOption('width', 80L) - 1L
   if (isTRUE(trim) && ncol(mat) > width) {
     mat <- mat[,seq(width),drop=FALSE]
   }
 
-  mat[mat == 0] <- ' '
-  mat[mat == 1] <- '#'
+  mat[mat == 0] <- zero
+  mat[mat == 1] <- one
   res <- apply(mat, 1, paste, collapse="")
   cat(res, sep = "\n")
 }
@@ -65,11 +69,12 @@ print_binary_matrix <- function(mat, trim = TRUE) {
 #'        speficied in the font.  You may wish to set a value here if you to
 #'        ensure ascenders/descenders do not overlap on subsequent lines, or just
 #'        to space out the text a bit more.
+#' @param zero,one characters to use to represent zero and one
 #'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 bdf_print_sample <- function(bdf, text, width = NULL, wrap = TRUE, trim = TRUE,
-                             line_height = NULL) {
+                             line_height = NULL, zero = ' ', one = '#') {
 
   stopifnot(inherits(bdf, 'bdf'))
 
@@ -83,7 +88,7 @@ bdf_print_sample <- function(bdf, text, width = NULL, wrap = TRUE, trim = TRUE,
   }
 
   mat <- bdf_create_mat(bdf, text, line_height = line_height)
-  print_binary_matrix(mat, trim = trim)
+  print_binary_matrix(mat, trim = trim, zero = zero, one = one)
 
   invisible(bdf)
 }
@@ -93,13 +98,14 @@ bdf_print_sample <- function(bdf, text, width = NULL, wrap = TRUE, trim = TRUE,
 #' View a single \code{bdf_char}
 #'
 #' @param bdf_char single \code{bdf_char}
+#' @param zero,one characters to use to represent zero and one
 #'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bdf_print_char <- function(bdf_char) {
+bdf_print_char <- function(bdf_char, zero = ' ', one = '#') {
   stopifnot(inherits(bdf_char, 'bdf_char'))
   mat <- coords_df_to_mat(bdf_char$coords)
-  print_binary_matrix(mat)
+  print_binary_matrix(mat, zero = zero, one = one)
 
   invisible(bdf_char)
 }

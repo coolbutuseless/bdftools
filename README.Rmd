@@ -85,6 +85,14 @@ myfont
 bdf_print_sample(myfont, "Hello RStats", wrap = FALSE)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# To compensate for many terminal fonts having a 2:1 ratio, it is possible 
+# to customize the characters used for each pixel
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bdf_print_sample(myfont, "Hello RStats", wrap = FALSE, zero = '  ', one = '@@')
+
+bdf_print_sample(myfont, "Hello RStats", wrap = FALSE, zero = '  ', one = '\u2588\u2588')
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Generate a graphics grob and draw it
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 grob <- bdfGrob(myfont, "Hello\nRStats", size = 10, shrink = 0.8, fill = 'lightblue', col = 'blue')
