@@ -1,0 +1,53 @@
+---
+title: "Example - Zoom"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Example - Zoom}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(bdftools)
+```
+
+
+```{r eval=FALSE}
+library(grid)
+myfont <- read_bdf_builtin("spleen-6x12.bdf")
+
+N    <- 100
+text <- "RStats"
+size <- displease::seq_ease(0.1, 250, n = N, type = 'exp-in')
+
+
+rot <- 180
+for (i in seq_along(size)) {
+  grob <- bdfGrob(
+    myfont, text,
+    size   = size[i],
+    shrink = 0.8,
+    col    = 'black',
+    fill   = 'black',
+    rot    = rot
+  )
+  
+  file <- sprintf("./working/anim/%04i.png", i)
+  png(file)
+  grid.newpage(); grid.draw(grob)
+  dev.off()
+  
+  rot <- rot + 3
+}
+
+system("convert -delay 5 ./working/anim/*.png vignettes/anim/zoom.gif")
+```
+
+<img src="anim/zoom.gif" />
