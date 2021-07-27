@@ -30,11 +30,6 @@ pkgdown::build_site(override = list(destination = "../coolbutuseless.github.io/p
 <!-- badges: end -->
 
 `bdftools` provides some tools for reading, manipulating and outputting BDF bitmap fonts.
-
-## ToDo
-
-* Todo: print header info when printing font
-    * Number of characters, width, height, bbox etc
     
 ### What's in the box
 
@@ -89,8 +84,12 @@ bdf_print_sample(myfont, "Hello RStats", wrap = FALSE)
 # to customize the characters used for each pixel
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 bdf_print_sample(myfont, "Hello RStats", wrap = FALSE, zero = '  ', one = '@@')
-
 bdf_print_sample(myfont, "Hello RStats", wrap = FALSE, zero = '  ', one = '\u2588\u2588')
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Print using compact unicode block characters
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bdf_print_sample_compact(myfont, 'Hello #RStats')
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Generate a graphics grob and draw it

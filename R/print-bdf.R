@@ -35,18 +35,52 @@ print.bdf <- function(x, text = 'Handgloves', zero = ' ', one = '#', ...) {
 #'
 #' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-print_binary_matrix <- function(mat, trim = TRUE, zero = ' ', one = '#') {
+print_binary_matrix <- function(mat, trim = TRUE, width = NULL, zero = ' ', one = '#') {
 
   stopifnot(nchar(zero) == nchar(one))
 
-  width <- getOption('width', 80L) - 1L
-  if (isTRUE(trim) && ncol(mat) > width) {
-    mat <- mat[,seq(width),drop=FALSE]
+  width <- width %||% getOption('width', 80L) - 1L
+  if (isTRUE(trim) && (ncol(mat) * nchar(zero)) > width) {
+    mat <- mat[,seq(width/nchar(zero)),drop=FALSE]
   }
 
   mat[mat == 0] <- zero
   mat[mat == 1] <- one
   res <- apply(mat, 1, paste, collapse="")
+  cat(res, sep = "\n")
+}
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Print a binary matrix to the terminal at half-height using unicode block chars
+#'
+#' @inheritParams print_binary_matrix
+#'
+#' @noRd
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+print_binary_matrix_compact <- function(mat, trim = TRUE, width = NULL) {
+
+  stopifnot(is.matrix(mat))
+
+  width <- width %||% getOption('width', 80L) - 1L
+  if (isTRUE(trim) && ncol(mat) > width) {
+    mat <- mat[,seq(width),drop=FALSE]
+  }
+
+  # Even # of rows
+  if (nrow(mat) %% 2 != 0) {
+    mat <- rbind(
+      rep(0L, ncol(mat)),
+      mat
+    )
+  }
+
+  blocks   <- c(`00` = ' ', `01` = '\U2584', `10` = '\U2580', `11` = '\U2588')
+  doublets <- paste0(mat[c(T, F)], mat[c(F, T)])
+  chars    <- blocks[doublets]
+  dim(chars) <- c(nrow(mat)/2, ncol(mat))
+
+  res <- apply(chars, 1, paste, collapse="")
   cat(res, sep = "\n")
 }
 
@@ -80,6 +114,34 @@ bdf_print_sample <- function(bdf, text, width = NULL, wrap = TRUE, trim = TRUE,
 
   if (isTRUE(wrap)) {
     width          <- (width %||% getOption('width', 80L)) - 1L
+    char_width     <- bdf$font_info$bbox[1] * nchar(zero)
+    chars_per_line <- floor(width/char_width)
+
+    text <- strwrap(text, chars_per_line)
+    text <- paste(text, collapse="\n")
+  }
+
+  mat <- bdf_create_mat(bdf, text, line_height = line_height)
+  print_binary_matrix(mat, trim = trim, zero = zero, one = one, width = width)
+
+  invisible(bdf)
+}
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Print sample text to screen using compact unicode block characters
+#'
+#' @inheritParams bdf_print_sample
+#'
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bdf_print_sample_compact <- function(bdf, text, width = NULL, wrap = TRUE, trim = TRUE,
+                             line_height = NULL) {
+
+  stopifnot(inherits(bdf, 'bdf'))
+
+  if (isTRUE(wrap)) {
+    width          <- (width %||% getOption('width', 80L)) - 1L
     char_width     <- bdf$font_info$bbox[1]
     chars_per_line <- floor(width/char_width)
 
@@ -88,10 +150,12 @@ bdf_print_sample <- function(bdf, text, width = NULL, wrap = TRUE, trim = TRUE,
   }
 
   mat <- bdf_create_mat(bdf, text, line_height = line_height)
-  print_binary_matrix(mat, trim = trim, zero = zero, one = one)
+  print_binary_matrix_compact(mat, trim = trim, width = width)
 
   invisible(bdf)
 }
+
+
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
