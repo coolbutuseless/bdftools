@@ -17,7 +17,12 @@ list containing
 \item{chars - list of \code{bdf_char} objects}
 \item{idx - an index which maps from utf8 codepoint to position in \code{chars}}
 }
+
+bdf object
 }
 \description{
 Read a BDF file
+}
+\examples{
+1 + 1
 }

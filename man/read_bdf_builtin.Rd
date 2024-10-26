@@ -13,6 +13,12 @@ read_bdf_builtin(
 \arguments{
 \item{font_name}{name of font}
 }
+\value{
+bdf font
+}
 \description{
 Read one of the fonts included with this package
+}
+\examples{
+read_bdf_builtin()
 }

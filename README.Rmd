@@ -40,7 +40,6 @@ pkgdown::build_site(override = list(destination = "../coolbutuseless.github.io/p
 * `bdf_create_mat(bdf, text)` Create a matrix representation for the given string
 * `bdfGrob(bdf, text, ...)` create a simple grob representation of the given string using
    squares for pixels
-* `geom_text_bdf()` renders text in a bitmap font - simlar interface to `ggplot2::geom_text()`
 * `as.data.frame.bdf(bdf)` converts the full `bdf` font into a rectangular 
    data.frame of all characters and their (x, y) coordinates.
 * `read_bdf_builtin()` to read in a font included with this package:
@@ -65,7 +64,7 @@ library(bdftools)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Load a BDF font
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-fontfile <- system.file("spleen-5x8.bdf", package = "bdftools", mustWork = TRUE)
+fontfile <- system.file("fonts", "spleen-5x8.bdf", package = "bdftools", mustWork = TRUE)
 myfont <- read_bdf(fontfile)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -123,42 +122,6 @@ bdf_print_sample(myfont, "Frak")
 
 
 
-
-## ggplot2 example with `geom_text_bdf()`
-
-`geom_text_bdf()` works very similar to `geom_text()` but text is rendered from 
-a bitmap font as a collection of large square pixels.  Key things to note:
-
-* Can set both an outline `colour` and a `fill` 
-* `shrink` argument determines the size of the square pixel.  `shrink = 1` is
-   the default. `shrink = 0.9` will make the square pixels smaller and not 
-   touching each other.
-
-```{r fig.width = 12, fig.height = 6}
-library(ggplot2)
-library(bdftools)
-
-fontfile <- system.file("spleen-5x8.bdf", package = "bdftools", mustWork = TRUE)
-
-plot_df <- head(mtcars)
-plot_df$car <- rownames(plot_df)
-plot_df$cyl <- as.factor(plot_df$cyl)
-
-ggplot(plot_df, aes(mpg, wt)) + 
-  geom_point(col = 'red') + 
-  geom_text_bdf(
-    aes(mpg, wt, label=car, fill = cyl), 
-    col          = NA, 
-    linewidth    = 0.5,
-    bdf_filename = fontfile, 
-    shrink       = 1,
-    size         = 9,
-    hjust        = -0.1
-  ) + 
-  theme_bw() + 
-  scale_fill_brewer(palette = 'Dark2') + 
-  labs(title = "geom_text_bdf() - bitmap font rendering in ggplot2")
-```
 
 
 ## Font sample sheet

@@ -53,6 +53,9 @@ gpar2(
 
 \item{...}{other arguments ignored}
 }
+\value{
+gpar object
+}
 \description{
 The \code{grid::gpar()} does not have any named arguments, and when used
 in a modern IDE, it is difficult to quicklyl know which graphical parameters

@@ -15,6 +15,13 @@
 
 \item{...}{ignored}
 }
+\value{
+None
+}
 \description{
 S3 method for printing \code{bdf} font objects
+}
+\examples{
+# Print output from a font to the terminal
+1 + 1
 }

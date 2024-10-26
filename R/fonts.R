@@ -7,6 +7,9 @@
 #'
 #' @param font_name name of font
 #'
+#' @return bdf font
+#' @examples
+#' read_bdf_builtin()
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 read_bdf_builtin <- function(font_name = c(
@@ -35,7 +38,7 @@ read_bdf_builtin <- function(font_name = c(
     font_name <- match.arg(font_name)
   }
 
-  filename  <- system.file(font_name, package = "bdftools", mustWork = TRUE)
+  filename  <- system.file("Fonts", font_name, package = "bdftools", mustWork = TRUE)
 
   read_bdf(filename)
 }

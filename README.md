@@ -15,27 +15,24 @@ BDF bitmap fonts.
 
 ### What’s in the box
 
--   `read_bdf(filename)` reads a BDF pixel font file into an R
-    representation i.e. an object of class `bdf`
--   `print.bdf()` prints meta information and a font sample.
--   `bdf_create_df(bdf, text)` Create a data.frame of points for the
-    given string
--   `bdf_create_mat(bdf, text)` Create a matrix representation for the
-    given string
--   `bdfGrob(bdf, text, ...)` create a simple grob representation of the
-    given string using squares for pixels
--   `geom_text_bdf()` renders text in a bitmap font - simlar interface
-    to `ggplot2::geom_text()`
--   `as.data.frame.bdf(bdf)` converts the full `bdf` font into a
-    rectangular data.frame of all characters and their (x, y)
-    coordinates.
--   `read_bdf_builtin()` to read in a font included with this package:
-    -   [Cozette](https://github.com/slavfox/Cozette) License: MIT. See
-        `LICENSE-cozette`
-    -   [Creep2](https://github.com/raymond-w-ko/creep2) License: MIT.
-        See `LICENSE-creep2`
-    -   [Spleen](https://github.com/fcambus/spleen) License: BSD
-        2-clause. See `LICENSE-spleen`
+- `read_bdf(filename)` reads a BDF pixel font file into an R
+  representation i.e. an object of class `bdf`
+- `print.bdf()` prints meta information and a font sample.
+- `bdf_create_df(bdf, text)` Create a data.frame of points for the given
+  string
+- `bdf_create_mat(bdf, text)` Create a matrix representation for the
+  given string
+- `bdfGrob(bdf, text, ...)` create a simple grob representation of the
+  given string using squares for pixels
+- `as.data.frame.bdf(bdf)` converts the full `bdf` font into a
+  rectangular data.frame of all characters and their (x, y) coordinates.
+- `read_bdf_builtin()` to read in a font included with this package:
+  - [Cozette](https://github.com/slavfox/Cozette) License: MIT. See
+    `LICENSE-cozette`
+  - [Creep2](https://github.com/raymond-w-ko/creep2) License: MIT. See
+    `LICENSE-creep2`
+  - [Spleen](https://github.com/fcambus/spleen) License: BSD 2-clause.
+    See `LICENSE-spleen`
 
 You can install from
 [GitHub](https://github.com/coolbutuseless/bdftools) with:
@@ -55,7 +52,7 @@ library(bdftools)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Load a BDF font
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-fontfile <- system.file("spleen-5x8.bdf", package = "bdftools", mustWork = TRUE)
+fontfile <- system.file("fonts", "spleen-5x8.bdf", package = "bdftools", mustWork = TRUE)
 myfont <- read_bdf(fontfile)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -148,7 +145,7 @@ grid.newpage(); grid.draw(grob)
 as.data.frame(myfont)
 ```
 
-    # A tibble: 2,385 x 10
+    # A tibble: 2,385 × 10
        encoding desc    dwidth     x     y  size pixel_size font_ascent font_descent
      *    <int> <chr>    <int> <dbl> <dbl> <int>      <int>       <int>        <int>
      1       32 SPACE        5    NA    NA     8          8           7            1
@@ -161,7 +158,8 @@ as.data.frame(myfont)
      8       34 QUOTAT…      5     4     7     8          8           7            1
      9       34 QUOTAT…      5     2     7     8          8           7            1
     10       34 QUOTAT…      5     4     6     8          8           7            1
-    # … with 2,375 more rows, and 1 more variable: line_height <int>
+    # ℹ 2,375 more rows
+    # ℹ 1 more variable: line_height <int>
 
 ``` r
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -170,7 +168,7 @@ as.data.frame(myfont)
 bdf_create_df(myfont, "abc")
 ```
 
-    # A tibble: 34 x 3
+    # A tibble: 34 × 3
            x     y   idx
        <dbl> <dbl> <int>
      1     3     5     1
@@ -183,7 +181,7 @@ bdf_create_df(myfont, "abc")
      8     1     2     1
      9     4     1     1
     10     3     1     1
-    # … with 24 more rows
+    # ℹ 24 more rows
 
 ``` r
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -229,45 +227,6 @@ bdf_print_sample(myfont, "Frak")
       ##              ##               ###########     ##      ###
       ##              ##                ##########     ##       ##
 
-## ggplot2 example with `geom_text_bdf()`
-
-`geom_text_bdf()` works very similar to `geom_text()` but text is
-rendered from a bitmap font as a collection of large square pixels. Key
-things to note:
-
--   Can set both an outline `colour` and a `fill`
--   `shrink` argument determines the size of the square pixel.
-    `shrink = 1` is the default. `shrink = 0.9` will make the square
-    pixels smaller and not touching each other.
-
-``` r
-library(ggplot2)
-library(bdftools)
-
-fontfile <- system.file("spleen-5x8.bdf", package = "bdftools", mustWork = TRUE)
-
-plot_df <- head(mtcars)
-plot_df$car <- rownames(plot_df)
-plot_df$cyl <- as.factor(plot_df$cyl)
-
-ggplot(plot_df, aes(mpg, wt)) + 
-  geom_point(col = 'red') + 
-  geom_text_bdf(
-    aes(mpg, wt, label=car, fill = cyl), 
-    col          = NA, 
-    linewidth    = 0.5,
-    bdf_filename = fontfile, 
-    shrink       = 1,
-    size         = 9,
-    hjust        = -0.1
-  ) + 
-  theme_bw() + 
-  scale_fill_brewer(palette = 'Dark2') + 
-  labs(title = "geom_text_bdf() - bitmap font rendering in ggplot2")
-```
-
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
-
 ## Font sample sheet
 
 An example of how the data.frame representation of the font can be
@@ -289,7 +248,7 @@ ggplot(plot_df) +
   coord_equal()
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
 ## Package Header
 
@@ -335,40 +294,39 @@ grid.draw(txt1)
 grid.draw(txt2)
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
 
 ## BDF Bitmap Font Resources
 
--   Fonts
-    -   [Tom Thumb tiny
-        font](https://robey.lag.net/2010/01/23/tiny-monospace-font.html)
-        (License: Dual licensed CC0 or CC-BY 3.0 license.)
-    -   [github repo of lots of
-        fonts](https://github.com/Tecate/bitmap-fonts) (License:
-        Various/unknown)
-    -   [unifont](https://www.unifoundry.com/unifont/index.html) a BDF
-        font with glyphs for every printable codepoint from `U+0000` to
-        `U+FFFF`. (License: Dual licensed SIL Open Font License (OFL)
-        version 1.1 and the GNU GPL 2+ with the GNU font embedding
-        exception)
-    -   [X11 fonts](https://www.cl.cam.ac.uk/~mgk25/ucs-fonts.html)
-        (License: Public Domain)
--   BDF Font Specification
-    -   [BDF on
-        Wikipedia](https://en.wikipedia.org/wiki/Glyph_Bitmap_Distribution_Format)
-    -   [BDF Specification Document
-        (Adobe)](https://adobe-type-tools.github.io/font-tech-notes/pdfs/5005.BDF_Spec.pdf)
+- Fonts
+  - [Tom Thumb tiny
+    font](https://robey.lag.net/2010/01/23/tiny-monospace-font.html)
+    (License: Dual licensed CC0 or CC-BY 3.0 license.)
+  - [github repo of lots of
+    fonts](https://github.com/Tecate/bitmap-fonts) (License:
+    Various/unknown)
+  - [unifont](https://www.unifoundry.com/unifont/index.html) a BDF font
+    with glyphs for every printable codepoint from `U+0000` to `U+FFFF`.
+    (License: Dual licensed SIL Open Font License (OFL) version 1.1 and
+    the GNU GPL 2+ with the GNU font embedding exception)
+  - [X11 fonts](https://www.cl.cam.ac.uk/~mgk25/ucs-fonts.html)
+    (License: Public Domain)
+- BDF Font Specification
+  - [BDF on
+    Wikipedia](https://en.wikipedia.org/wiki/Glyph_Bitmap_Distribution_Format)
+  - [BDF Specification Document
+    (Adobe)](https://adobe-type-tools.github.io/font-tech-notes/pdfs/5005.BDF_Spec.pdf)
 
 ## Related Software
 
 Other retro/vector/pixel fonts in R
 
--   [arcade font](https://github.com/coolbutuseless/arcadefont)
--   [gridfont](https://github.com/coolbutuseless/gridfont)
--   [hershey](https://github.com/coolbutuseless/hershey)
+- [arcade font](https://github.com/coolbutuseless/arcadefont)
+- [gridfont](https://github.com/coolbutuseless/gridfont)
+- [hershey](https://github.com/coolbutuseless/hershey)
 
 ## Acknowledgements
 
--   R Core for developing and maintaining the language.
--   CRAN maintainers, for patiently shepherding packages onto CRAN and
-    maintaining the repository
+- R Core for developing and maintaining the language.
+- CRAN maintainers, for patiently shepherding packages onto CRAN and
+  maintaining the repository

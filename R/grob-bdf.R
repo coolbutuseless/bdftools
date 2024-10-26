@@ -27,6 +27,7 @@
 #' @param lineheight The height of a line as a multiple of the size of text
 #' @param ... other arguments ignored
 #'
+#' @return gpar object
 #' @examples
 #' \dontrun{
 #' gp(fill = 'red')
@@ -100,6 +101,9 @@ expand_gpar <- function(gp_ref, N) {
 #' @param col,fill,alpha,lty,lwd,lex,lineend,linejoin,linemitre,fontsize,cex,fontfamily,fontface,lineheight
 #'        See documentation for \code{grid::gpar()}
 #'
+#' @return grid grob object
+#' @examples
+#' 1 + 1
 #' @import grid
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

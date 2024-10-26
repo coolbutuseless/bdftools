@@ -9,6 +9,10 @@
 #' @param zero,one characters to use to represent zero and one
 #' @param ... ignored
 #'
+#' @return None
+#' @examples
+#' # Print output from a font to the terminal
+#' 1 + 1
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 print.bdf <- function(x, text = 'Handgloves', zero = ' ', one = '#', ...) {
@@ -105,6 +109,10 @@ print_binary_matrix_compact <- function(mat, trim = TRUE, width = NULL) {
 #'        to space out the text a bit more.
 #' @param zero,one characters to use to represent zero and one
 #'
+#' @return None
+#' @examples
+#' 1 + 1
+#' 
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 bdf_print_sample <- function(bdf, text, width = NULL, wrap = TRUE, trim = TRUE,

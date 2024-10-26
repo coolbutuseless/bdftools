@@ -38,6 +38,13 @@ to space out the text a bit more.}
 
 \item{zero, one}{characters to use to represent zero and one}
 }
+\value{
+None
+}
 \description{
 Print sample text to screen
+}
+\examples{
+1 + 1
+
 }

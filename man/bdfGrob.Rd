@@ -48,6 +48,12 @@ bdfGrob(
 
 \item{col, fill, alpha, lty, lwd, lex, lineend, linejoin, linemitre, fontsize, cex, fontfamily, fontface, lineheight}{See documentation for \code{grid::gpar()}}
 }
+\value{
+grid grob object
+}
 \description{
 Convert a \code{bdf_str} object into grid grob object
+}
+\examples{
+1 + 1
 }

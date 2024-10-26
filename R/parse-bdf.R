@@ -13,6 +13,9 @@
 #' \item{idx - an index which maps from utf8 codepoint to position in \code{chars}}
 #' }
 #'
+#' @return bdf object
+#' @examples
+#' 1 + 1
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 read_bdf <- function(filename) {
