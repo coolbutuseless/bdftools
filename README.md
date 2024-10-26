@@ -3,8 +3,6 @@
 
 # bdftools
 
-<img src="man/figures/header.png" />
-
 <!-- badges: start -->
 
 ![](https://img.shields.io/badge/cool-useless-green.svg)
@@ -62,170 +60,71 @@ myfont <- read_bdf(fontfile)
 myfont
 ```
 
-    size=8, bbox=5, pixel_size=8, font_descent=0, font_ascent=-1, default_char=8, line_height=1, bitmap=7, size=32, bbox=8, pixel_size= 
+    $size
+    [1] 8
 
-                      #       #                      
-    #  #              #       #                      
-    #  #  ##  ###   ###  ###  #    ##  #  #  ###  ###
-    ####    # #  # #  # #  #  #   #  # #  # #  # #   
-    #  #  ### #  # #  # #  #  #   #  # #  # ####  ## 
-    #  # #  # #  # #  #  ##   #   #  #  ##  #       #
-    #  #  ### #  #  ###    #   ##  ##   ##   ### ### 
-                        ###                          
+    $bbox
+    [1]  5  8  0 -1
+
+    $pixel_size
+    [1] 8
+
+    $font_descent
+    [1] 1
+
+    $font_ascent
+    [1] 7
+
+    $default_char
+    [1] 32
+
+    $line_height
+    [1] 8
 
 ``` r
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Generate some sample text in the console
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bdf_print_sample(myfont, "Hello RStats", wrap = FALSE)
-```
-
-               #    #                        #         #       
-    #  #       #    #             ###   ###  #         #       
-    #  #  ###  #    #    ##       #  # #    ###   ##  ###   ###
-    #### #  #  #    #   #  #      #  #  ##   #      #  #   #   
-    #  # ####  #    #   #  #      ###     #  #    ###  #    ## 
-    #  # #     #    #   #  #      #  #    #  #   #  #  #      #
-    #  #  ###   ##   ##  ##       #  # ###    ##  ###   ## ### 
-
-``` r
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# To compensate for many terminal fonts having a 2:1 ratio, it is possible 
-# to customize the characters used for each pixel
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bdf_print_sample(myfont, "Hello RStats", wrap = FALSE, zero = '  ', one = '@@')
-```
-
-                          @@        @@                                            
-    @@    @@              @@        @@                          @@@@@@      @@@@@@
-    @@    @@    @@@@@@    @@        @@        @@@@              @@    @@  @@      
-    @@@@@@@@  @@    @@    @@        @@      @@    @@            @@    @@    @@@@  
-    @@    @@  @@@@@@@@    @@        @@      @@    @@            @@@@@@          @@
-    @@    @@  @@          @@        @@      @@    @@            @@    @@        @@
-    @@    @@    @@@@@@      @@@@      @@@@    @@@@              @@    @@  @@@@@@  
-
-``` r
-bdf_print_sample(myfont, "Hello RStats", wrap = FALSE, zero = '  ', one = '\u2588\u2588')
-```
-
-                          ██        ██                                            
-    ██    ██              ██        ██                          ██████      ██████
-    ██    ██    ██████    ██        ██        ████              ██    ██  ██      
-    ████████  ██    ██    ██        ██      ██    ██            ██    ██    ████  
-    ██    ██  ████████    ██        ██      ██    ██            ██████          ██
-    ██    ██  ██          ██        ██      ██    ██            ██    ██        ██
-    ██    ██    ██████      ████      ████    ████              ██    ██  ██████  
-
-``` r
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Print using compact unicode block characters
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bdf_print_sample_compact(myfont, 'Hello #RStats')
-```
-
-               ▄    ▄                             ▄         ▄       
-    █  █  ▄▄▄  █    █    ▄▄       ▄█▄█▄█▀▀▄ ▄▀▀▀ ▄█▄   ▄▄  ▄█▄   ▄▄▄
-    █▀▀█ █▄▄█  █    █   █  █       █ █ █▄▄▀  ▀▀▄  █    ▄▄█  █   ▀▄▄ 
-    █  █ ▀▄▄▄  ▀▄▄  ▀▄▄ ▀▄▄▀      ▀█▀█▀█  █ ▄▄▄▀  ▀▄▄ ▀▄▄█  ▀▄▄ ▄▄▄▀
-
-``` r
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Generate a graphics grob and draw it
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-grob <- bdfGrob(myfont, "Hello\nRStats", size = 10, shrink = 0.8, fill = 'lightblue', col = 'blue')
-grid.newpage(); grid.draw(grob)
+create_matrix("Hello RStats", myfont) |> 
+  as.raster() |>
+  plot(interpolate = FALSE)
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
 ``` r
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# View the entire font as a data.frame of coordiantes
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-as.data.frame(myfont)
+coords <- create_coords("Hello\n#RStats!", myfont)
+head(coords)
 ```
 
-    # A tibble: 2,385 × 10
-       encoding desc    dwidth     x     y  size pixel_size font_ascent font_descent
-     *    <int> <chr>    <int> <dbl> <dbl> <int>      <int>       <int>        <int>
-     1       32 SPACE        5    NA    NA     8          8           7            1
-     2       33 EXCLAM…      5     3     7     8          8           7            1
-     3       33 EXCLAM…      5     3     6     8          8           7            1
-     4       33 EXCLAM…      5     3     5     8          8           7            1
-     5       33 EXCLAM…      5     3     4     8          8           7            1
-     6       33 EXCLAM…      5     3     3     8          8           7            1
-     7       33 EXCLAM…      5     3     1     8          8           7            1
-     8       34 QUOTAT…      5     4     7     8          8           7            1
-     9       34 QUOTAT…      5     2     7     8          8           7            1
-    10       34 QUOTAT…      5     4     6     8          8           7            1
-    # ℹ 2,375 more rows
-    # ℹ 1 more variable: line_height <int>
+    # A tibble: 6 × 3
+          x     y   idx
+      <dbl> <dbl> <int>
+    1     4    14     1
+    2     1    14     1
+    3     4    13     1
+    4     1    13     1
+    5     4    12     1
+    6     3    12     1
 
 ``` r
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# View the coordinates of a string rendered in this font
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bdf_create_df(myfont, "abc")
+grid.newpage()
+grid.rect(coords$x * 4, coords$y * 4, width = 3, height = 3, default.units = 'mm',
+          gp = gpar(fill = 'lightblue'))
 ```
 
-    # A tibble: 34 × 3
-           x     y   idx
-       <dbl> <dbl> <int>
-     1     3     5     1
-     2     2     5     1
-     3     4     4     1
-     4     4     3     1
-     5     3     3     1
-     6     2     3     1
-     7     4     2     1
-     8     1     2     1
-     9     4     1     1
-    10     3     1     1
-    # ℹ 24 more rows
-
-``` r
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# View the coordinates of a string rendered in this font
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bdf_create_mat(myfont, "abc")
-```
-
-         [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]
-    [1,]    0    0    0    0    0    1    0    0    0     0     0     0     0     0
-    [2,]    0    0    0    0    0    1    0    0    0     0     0     0     0     0
-    [3,]    0    1    1    0    0    1    1    1    0     0     0     1     1     1
-    [4,]    0    0    0    1    0    1    0    0    1     0     1     0     0     0
-    [5,]    0    1    1    1    0    1    0    0    1     0     1     0     0     0
-    [6,]    1    0    0    1    0    1    0    0    1     0     1     0     0     0
-    [7,]    0    1    1    1    0    1    1    1    0     0     0     1     1     1
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
 # An example of a larger font
 
 ``` r
 myfont <- bdftools::read_bdf_builtin("spleen-16x32.bdf")
-bdf_print_sample(myfont, "Frak")
+create_matrix("Frak!", myfont) |> 
+  as.raster() |>
+  plot(interpolate = FALSE)
 ```
 
-        ##########                                     ##         
-       ###########                                     ##         
-      ###                                              ##         
-      ##                                               ##         
-      ##                                               ##         
-      ##                                               ##         
-      ##                ##########     #########       ##     ##  
-      ##               ###########     ##########      ##    ###  
-      ##              ###       ##             ###     ##   ###   
-      #########       ##        ##              ##     ##  ###    
-      #########       ##                        ##     ## ###     
-      ##              ##                ##########     #####      
-      ##              ##               ###########     #####      
-      ##              ##              ###       ##     ## ###     
-      ##              ##              ##        ##     ##  ###    
-      ##              ##              ##        ##     ##   ###   
-      ##              ##              ##        ##     ##    ###  
-      ##              ##              ###       ##     ##     ### 
-      ##              ##               ###########     ##      ###
-      ##              ##                ##########     ##       ##
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
 ## Font sample sheet
 
@@ -239,59 +138,13 @@ library(bdftools)
 myfont <- read_bdf_builtin("cozette.bdf")
 
 plot_df <- as.data.frame(myfont)
-plot_df <- plot_df[plot_df$encoding >= 65 & plot_df$encoding <= 124,]
+plot_df <- plot_df[plot_df$encoding >= utf8ToInt('A') & plot_df$encoding <= utf8ToInt('|'),]
 
 ggplot(plot_df) +
   geom_tile(aes(x, y), width=0.9, height = 0.9, na.rm = TRUE) +
   facet_wrap(~encoding + desc, ncol = 12)+
   theme_void(10) +
   coord_equal()
-```
-
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
-
-## Package Header
-
-How the header for this page was created.
-
-``` r
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Choose some fonts
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-font1 <- bdftools::read_bdf_builtin("spleen-16x32.bdf")
-font2 <- bdftools::read_bdf_builtin("spleen-5x8.bdf")
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Main header
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-txt1 <- bdfGrob(
-  font1, "bdftools", 
-  lwd    = 0.5,
-  fill   = '#3D428B',
-  col    = 'darkblue',
-  size   = 8, 
-  shrink = 0.8
-)
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Subtitle
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-txt2 <- bdfGrob(
-  font2, "bitmap fonts in R", 
-  lwd    = 0.5,
-  col    = 'darkblue',
-  size   = 11, 
-  shrink = 0.8,
-  fill   = viridisLite::inferno(151),
-  y      = unit(0.5, 'npc') - unit(50, 'mm')
-)
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Plot it
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-grid.newpage(); 
-grid.draw(txt1)
-grid.draw(txt2)
 ```
 
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
@@ -324,9 +177,3 @@ Other retro/vector/pixel fonts in R
 - [arcade font](https://github.com/coolbutuseless/arcadefont)
 - [gridfont](https://github.com/coolbutuseless/gridfont)
 - [hershey](https://github.com/coolbutuseless/hershey)
-
-## Acknowledgements
-
-- R Core for developing and maintaining the language.
-- CRAN maintainers, for patiently shepherding packages onto CRAN and
-  maintaining the repository

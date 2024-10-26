@@ -22,8 +22,6 @@ pkgdown::build_site(override = list(destination = "../coolbutuseless.github.io/p
 
 # bdftools
 
-<img src="man/figures/header.png" />
-
 
 <!-- badges: start -->
 ![](https://img.shields.io/badge/cool-useless-green.svg)
@@ -76,51 +74,32 @@ myfont
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Generate some sample text in the console
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bdf_print_sample(myfont, "Hello RStats", wrap = FALSE)
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# To compensate for many terminal fonts having a 2:1 ratio, it is possible 
-# to customize the characters used for each pixel
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bdf_print_sample(myfont, "Hello RStats", wrap = FALSE, zero = '  ', one = '@@')
-bdf_print_sample(myfont, "Hello RStats", wrap = FALSE, zero = '  ', one = '\u2588\u2588')
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Print using compact unicode block characters
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bdf_print_sample_compact(myfont, 'Hello #RStats')
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Generate a graphics grob and draw it
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-grob <- bdfGrob(myfont, "Hello\nRStats", size = 10, shrink = 0.8, fill = 'lightblue', col = 'blue')
-grid.newpage(); grid.draw(grob)
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# View the entire font as a data.frame of coordiantes
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-as.data.frame(myfont)
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# View the coordinates of a string rendered in this font
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bdf_create_df(myfont, "abc")
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# View the coordinates of a string rendered in this font
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bdf_create_mat(myfont, "abc")
+create_matrix("Hello RStats", myfont) |> 
+  as.raster() |>
+  plot(interpolate = FALSE)
 ```
+
+
+```{r comment='', fig.height = 3}
+coords <- create_coords("Hello\n#RStats!", myfont)
+head(coords)
+
+grid.newpage()
+grid.rect(coords$x * 4, coords$y * 4, width = 3, height = 3, default.units = 'mm',
+          gp = gpar(fill = 'lightblue'))
+```
+
+
+
 
 # An example of a larger font
 
 ```{r comment=""}
 myfont <- bdftools::read_bdf_builtin("spleen-16x32.bdf")
-bdf_print_sample(myfont, "Frak")
+create_matrix("Frak!", myfont) |> 
+  as.raster() |>
+  plot(interpolate = FALSE)
 ```
-
-
 
 
 
@@ -136,7 +115,7 @@ library(bdftools)
 myfont <- read_bdf_builtin("cozette.bdf")
 
 plot_df <- as.data.frame(myfont)
-plot_df <- plot_df[plot_df$encoding >= 65 & plot_df$encoding <= 124,]
+plot_df <- plot_df[plot_df$encoding >= utf8ToInt('A') & plot_df$encoding <= utf8ToInt('|'),]
 
 ggplot(plot_df) +
   geom_tile(aes(x, y), width=0.9, height = 0.9, na.rm = TRUE) +
@@ -145,59 +124,6 @@ ggplot(plot_df) +
   coord_equal()
 ```
 
-
-## Package Header
-
-How the header for this page was created.
-
-```{r fig.width=18, fig.height=7}
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Choose some fonts
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-font1 <- bdftools::read_bdf_builtin("spleen-16x32.bdf")
-font2 <- bdftools::read_bdf_builtin("spleen-5x8.bdf")
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Main header
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-txt1 <- bdfGrob(
-  font1, "bdftools", 
-  lwd    = 0.5,
-  fill   = '#3D428B',
-  col    = 'darkblue',
-  size   = 8, 
-  shrink = 0.8
-)
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Subtitle
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-txt2 <- bdfGrob(
-  font2, "bitmap fonts in R", 
-  lwd    = 0.5,
-  col    = 'darkblue',
-  size   = 11, 
-  shrink = 0.8,
-  fill   = viridisLite::inferno(151),
-  y      = unit(0.5, 'npc') - unit(50, 'mm')
-)
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Plot it
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-grid.newpage(); 
-grid.draw(txt1)
-grid.draw(txt2)
-```
-
-
-```{r echo=FALSE, eval=FALSE}
-png("man/figures/header.png", width = 1200, height = 500)
-grid.newpage(); 
-grid.draw(txt1)
-grid.draw(txt2)
-dev.off()
-```
 
 
 
@@ -224,8 +150,4 @@ Other retro/vector/pixel fonts in R
 * [gridfont](https://github.com/coolbutuseless/gridfont)
 * [hershey](https://github.com/coolbutuseless/hershey)
 
-## Acknowledgements
 
-* R Core for developing and maintaining the language.
-* CRAN maintainers, for patiently shepherding packages onto CRAN and maintaining
-  the repository

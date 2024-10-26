@@ -1,12 +1,9 @@
 
 
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' S3 method for printing \code{bdf} font objects
 #'
 #' @param x bdf font object as returned by \code{read_bdf()}
-#' @param text Example string to output to console in this font. Default: "Handgloves"
-#' @param zero,one characters to use to represent zero and one
 #' @param ... ignored
 #'
 #' @return None
@@ -15,192 +12,9 @@
 #' 1 + 1
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-print.bdf <- function(x, text = 'Handgloves', zero = ' ', one = '#', ...) {
-  # print(x$font_info)
-  info <- x$font_info
-
-  info$bitmap <- paste(info$bitmap, collapse=",")
-
-  nn <- names(info)
-  res <- paste(nn, unlist(info), sep="=", collapse = ", ")
-  cat(res, "\n\n")
-
-  bdf_print_sample(x, text, zero = zero, one = one)
-
+print.bdf <- function(x, ...) {
+  print(x$font_info)
   invisible(x)
-}
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Print a binary matrix to the terminal
-#'
-#' @param mat matrix of 0/1 values
-#' @param zero,one characters to use to represent zero and one
-#'
-#' @noRd
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-print_binary_matrix <- function(mat, trim = TRUE, width = NULL, zero = ' ', one = '#') {
-
-  stopifnot(nchar(zero) == nchar(one))
-
-  width <- width %||% getOption('width', 80L) - 1L
-  if (isTRUE(trim) && (ncol(mat) * nchar(zero)) > width) {
-    mat <- mat[,seq(width/nchar(zero)),drop=FALSE]
-  }
-
-  mat[mat == 0] <- zero
-  mat[mat == 1] <- one
-  res <- apply(mat, 1, paste, collapse="")
-  cat(res, sep = "\n")
-}
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Print a binary matrix to the terminal at half-height using unicode block chars
-#'
-#' @inheritParams print_binary_matrix
-#'
-#' @noRd
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-print_binary_matrix_compact <- function(mat, trim = TRUE, width = NULL) {
-
-  stopifnot(is.matrix(mat))
-
-  width <- width %||% getOption('width', 80L) - 1L
-  if (isTRUE(trim) && ncol(mat) > width) {
-    mat <- mat[,seq(width),drop=FALSE]
-  }
-
-  # Even # of rows
-  if (nrow(mat) %% 2 != 0) {
-    mat <- rbind(
-      rep(0L, ncol(mat)),
-      mat
-    )
-  }
-
-  blocks   <- c(`00` = ' ', `01` = '\U2584', `10` = '\U2580', `11` = '\U2588')
-  doublets <- paste0(mat[c(T, F)], mat[c(F, T)])
-  chars    <- blocks[doublets]
-  dim(chars) <- c(nrow(mat)/2, ncol(mat))
-
-  res <- apply(chars, 1, paste, collapse="")
-  cat(res, sep = "\n")
-}
-
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Print sample text to screen
-#'
-#' @param bdf \code{bdf} font object as returned by \code{read_bdf()}
-#' @param text string
-#' @param wrap wrap the text into separate lines using \code{base::strwrap()}.
-#'        Default: TRUE.   Note that \code{strwrap()} will only break lines
-#'        at whitespace, and resulting text may still overflow terminal width.
-#'        See \code{trim} argument.
-#' @param trim trim the text at the consolve width. default: TRUE
-#' @param width desired output width for output. Default: NULL means to
-#'        use the current console width
-#' @param line_height This value is used for vertical spacing between lines of text when
-#'        the text is wrapped.  If \code{line_height} is NULL, then use the pixel size
-#'        speficied in the font.  You may wish to set a value here if you to
-#'        ensure ascenders/descenders do not overlap on subsequent lines, or just
-#'        to space out the text a bit more.
-#' @param zero,one characters to use to represent zero and one
-#'
-#' @return None
-#' @examples
-#' 1 + 1
-#' 
-#' @export
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bdf_print_sample <- function(bdf, text, width = NULL, wrap = TRUE, trim = TRUE,
-                             line_height = NULL, zero = ' ', one = '#') {
-
-  stopifnot(inherits(bdf, 'bdf'))
-
-  if (isTRUE(wrap)) {
-    width          <- (width %||% getOption('width', 80L)) - 1L
-    char_width     <- bdf$font_info$bbox[1] * nchar(zero)
-    chars_per_line <- floor(width/char_width)
-
-    text <- strwrap(text, chars_per_line)
-    text <- paste(text, collapse="\n")
-  }
-
-  mat <- bdf_create_mat(bdf, text, line_height = line_height)
-  print_binary_matrix(mat, trim = trim, zero = zero, one = one, width = width)
-
-  invisible(bdf)
-}
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Print sample text to screen using compact unicode block characters
-#'
-#' @inheritParams bdf_print_sample
-#'
-#' @export
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bdf_print_sample_compact <- function(bdf, text, width = NULL, wrap = TRUE, trim = TRUE,
-                             line_height = NULL) {
-
-  stopifnot(inherits(bdf, 'bdf'))
-
-  if (isTRUE(wrap)) {
-    width          <- (width %||% getOption('width', 80L)) - 1L
-    char_width     <- bdf$font_info$bbox[1]
-    chars_per_line <- floor(width/char_width)
-
-    text <- strwrap(text, chars_per_line)
-    text <- paste(text, collapse="\n")
-  }
-
-  mat <- bdf_create_mat(bdf, text, line_height = line_height)
-  print_binary_matrix_compact(mat, trim = trim, width = width)
-
-  invisible(bdf)
-}
-
-
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' View a single \code{bdf_char}
-#'
-#' @param bdf_char single \code{bdf_char}
-#' @param zero,one characters to use to represent zero and one
-#'
-#' @export
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bdf_print_char <- function(bdf_char, zero = ' ', one = '#') {
-  stopifnot(inherits(bdf_char, 'bdf_char'))
-  mat <- coords_df_to_mat(bdf_char$coords)
-  print_binary_matrix(mat, zero = zero, one = one)
-
-  invisible(bdf_char)
-}
-
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Get a list of \code{bdf_char} objects from a \code{bdf} font
-#'
-#' @inheritParams bdf_print_sample
-#'
-#' @return list of \code{bdf_char} objects. A space is used for any
-#'         unknown characters, or the default character from the font if one is
-#'         specified in the font header.
-#'
-#' @export
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bdf_extract_chars <- function(bdf, text) {
-  codes <- utf8ToInt(text)
-  idx   <- bdf$idx[codes + 1L]
-  idx[is.na(idx)] <- bdf$idx[bdf$font_info$default_char + 1L]
-
-  bdf$chars[idx]
 }
 
 
@@ -208,13 +22,15 @@ bdf_extract_chars <- function(bdf, text) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create a data.frame of the given string and font
 #'
-#' @inheritParams bdf_print_sample
+#' @param bdf font
+#' @param text text
+#' @param line_height height
 #'
 #' @return data.frame of x,y coordinates
 #'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bdf_create_df <- function(bdf, text, line_height = NULL) {
+create_coords <- function(text, bdf, line_height = NULL) {
   codes <- utf8ToInt(text)
   dfs   <- vector('list', length(codes))
 
@@ -289,7 +105,7 @@ bdf_create_df <- function(bdf, text, line_height = NULL) {
 #'
 #' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-coords_df_to_mat <- function(df) {
+coords_to_mat <- function(df) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # y coords can sometimes be negative because of descenders/offsets
   # so push them all to be at least "1", so that (x,y) coords can be used
@@ -323,21 +139,19 @@ coords_df_to_mat <- function(df) {
 }
 
 
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create a matrix of the given string and font
 #'
-#' @inheritParams bdf_print_sample
-#' @inheritParams bdf_create_df
+#' @inheritParams create_coords
 #'
 #' @return matrix
 #'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bdf_create_mat <- function(bdf, text, line_height = NULL) {
-
-  df <- bdf_create_df(bdf, text, line_height = line_height)
-
-  coords_df_to_mat(df)
+create_matrix <- function(text, bdf, line_height = NULL) {
+  df <- create_coords(text, bdf, line_height = line_height)
+  1L - coords_to_mat(df)  # invert black/white
 }
 
 
