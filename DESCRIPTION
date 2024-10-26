@@ -27,3 +27,5 @@ Copyright: The included 'spleen' fonts are BSD licensed and Copyright (c)
 URL: https://github.com/coolbutuseless/bdftools
 BugReports: https://github.com/coolbutuseless/bdftools/issues
 VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)

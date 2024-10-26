@@ -5,3 +5,4 @@
 ^working$
 ^LICENSE-.*$
 ^LICENSE.md$
+^data-raw$

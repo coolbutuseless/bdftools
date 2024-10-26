@@ -2,8 +2,8 @@
 
 S3method(as.data.frame,bdf)
 S3method(as.data.frame,bdf_char)
-S3method(print,bdf)
 export(create_coords)
 export(create_matrix)
-export(read_bdf)
-export(read_bdf_builtin)
+export(create_raster)
+export(invert)
+importFrom(grDevices,as.raster)

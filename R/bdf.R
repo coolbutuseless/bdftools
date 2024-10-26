@@ -1,28 +1,10 @@
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' S3 method for printing \code{bdf} font objects
-#'
-#' @param x bdf font object as returned by \code{read_bdf()}
-#' @param ... ignored
-#'
-#' @return None
-#' @examples
-#' # Print output from a font to the terminal
-#' 1 + 1
-#' @export
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-print.bdf <- function(x, ...) {
-  print(x$font_info)
-  invisible(x)
-}
-
-
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create a data.frame of the given string and font
 #'
-#' @param bdf font
+#' @param font bdf font name
 #' @param text text
 #' @param line_height height
 #'
@@ -30,7 +12,34 @@ print.bdf <- function(x, ...) {
 #'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-create_coords <- function(text, bdf, line_height = NULL) {
+create_coords <- function(text, font, line_height = NULL) {
+  
+  if (font %in% names(bdfs)) {
+    create_coords_bdf(text = text, font = font, line_height = line_height)
+  } else {
+    stop("Unknown font: ", font)
+  }
+  
+}
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Create a data.frame of the given string and font
+#'
+#' @param font bdf font name
+#' @param text text
+#' @param line_height height
+#'
+#' @return data.frame of x,y coordinates
+#'
+#' @noRd
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+create_coords_bdf <- function(text, font, line_height = NULL) {
+  
+  if (!font %in% names(bdfs)) {
+    stop("No such bdf font: ", font)
+  }
+  bdf <- bdfs[[font]]
+  
   codes <- utf8ToInt(text)
   dfs   <- vector('list', length(codes))
 
@@ -149,11 +158,62 @@ coords_to_mat <- function(df) {
 #'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-create_matrix <- function(text, bdf, line_height = NULL) {
-  df <- create_coords(text, bdf, line_height = line_height)
-  1L - coords_to_mat(df)  # invert black/white
+create_matrix <- function(text, font, line_height = NULL) {
+  if (font %in% names(bdfs)) {
+    create_matrix_bdf(text = text, font = font, line_height = line_height)
+  } else {
+    stop("Unknown font: ", font)
+  }
 }
 
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Create a matrix of the given string and font
+#'
+#' @inheritParams create_coords
+#'
+#' @return matrix
+#'
+#' @noRd
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+create_matrix_bdf <- function(text, font, line_height = NULL) {
+  df <- create_coords(text, font, line_height = line_height)
+  coords_to_mat(df)  # invert black/white
+}
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Create a raster
+#' 
+#' @inheritParams create_coords
+#' 
+#' @return raster
+#' @importFrom grDevices as.raster
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+create_raster <- function(text, font, line_height = NULL) {
+  if (font %in% names(bdfs)) {
+    mat <- create_matrix_bdf(text = text, font = font, line_height = line_height)
+    mat <- 1L - mat
+    grDevices::as.raster(mat)
+  } else {
+    stop("Unknown font: ", font)
+  }
+}
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Invert a binary matrix
+#' @param mat matrix of just 0/1 values
+#' @return matrix with flipped bits
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+invert <- function(mat) {
+  stopifnot(is.matrix(mat))
+  1L - mat
+}
 
 
 

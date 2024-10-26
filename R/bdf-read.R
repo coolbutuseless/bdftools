@@ -14,9 +14,7 @@
 #' }
 #'
 #' @return bdf object
-#' @examples
-#' 1 + 1
-#' @export
+#' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 read_bdf <- function(filename) {
 
