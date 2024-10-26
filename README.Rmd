@@ -32,13 +32,13 @@ pkgdown::build_site(override = list(destination = "../coolbutuseless.github.io/p
 ### What's in the box
 
 * Bitmap fonts
-    * `bitmap_font_coords()`
-    * `bitmap_font_matrix()`
-    * `bitmap_font_raster()`
+    * `bitmap_text_coords()`
+    * `bitmap_text_matrix()`
+    * `bitmap_text_raster()`
 * Vector font
-    * `vector_font_coords()`
-    * `vector_font_matrix()`
-    * `vector_font_raster()`
+    * `vector_text_coords()`
+    * `vector_text_matrix()`
+    * `vector_text_raster()`
 * Hide these as internal data
     * `gridfont`, `gridfont_smooth`, `arcade`
 
@@ -50,7 +50,6 @@ Bitmap fonts:
 * [Creep2](https://github.com/raymond-w-ko/creep2) License: MIT. See `LICENSE-creep2`
 * [Spleen v2.1.0](https://github.com/fcambus/spleen) License: BSD 2-clause. See `LICENSE-spleen`
 * [Unifont]() Add to copyright
-* [toit]() Add to copyright
 
 Vector fonts
 

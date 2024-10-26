@@ -197,11 +197,18 @@ split_char_vec_into_chunks <- function(txt, regex) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 parse_char <- function(txt, height) {
 
+  txt <- txt[txt != ""]
+  txt <- txt[!startsWith(txt, "#")]
+  txt <- txt[!startsWith(txt, "//")]
+  
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Sanity Check
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   stopifnot(startsWith(txt[1]            , "STARTCHAR"))
-  stopifnot(           txt[length(txt)] == "ENDCHAR"  )
+  if (txt[length(txt)] != "ENDCHAR") {
+    print(txt)
+    stop("Expecting ENDCHAR but got: ", txt[length(txt)])
+  }
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Split txt into
