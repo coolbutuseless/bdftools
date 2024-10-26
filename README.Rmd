@@ -31,19 +31,34 @@ pkgdown::build_site(override = list(destination = "../coolbutuseless.github.io/p
     
 ### What's in the box
 
-* `read_bdf(filename)` reads a BDF pixel font file into an R representation
-   i.e. an object of class `bdf`
-* `print.bdf()` prints meta information and a font sample. 
-* `bdf_create_df(bdf, text)` Create a data.frame of points for the given string 
-* `bdf_create_mat(bdf, text)` Create a matrix representation for the given string
-* `bdfGrob(bdf, text, ...)` create a simple grob representation of the given string using
-   squares for pixels
-* `as.data.frame.bdf(bdf)` converts the full `bdf` font into a rectangular 
-   data.frame of all characters and their (x, y) coordinates.
-* `read_bdf_builtin()` to read in a font included with this package:
-    * [Cozette v1.25.2](https://github.com/slavfox/Cozette) License: MIT. See `LICENSE-cozette`
-    * [Creep2](https://github.com/raymond-w-ko/creep2) License: MIT. See `LICENSE-creep2`
-    * [Spleen v2.1.0](https://github.com/fcambus/spleen) License: BSD 2-clause. See `LICENSE-spleen`
+* Bitmap fonts
+    * `bitmap_font_coords()`
+    * `bitmap_font_matrix()`
+    * `bitmap_font_raster()`
+* Vector font
+    * `vector_font_coords()`
+    * `vector_font_matrix()`
+    * `vector_font_raster()`
+* Hide these as internal data
+    * `gridfont`, `gridfont_smooth`, `arcade`
+
+### Fonts
+
+Bitmap fonts:
+
+* [Cozette v1.25.2](https://github.com/slavfox/Cozette) License: MIT. See `LICENSE-cozette`
+* [Creep2](https://github.com/raymond-w-ko/creep2) License: MIT. See `LICENSE-creep2`
+* [Spleen v2.1.0](https://github.com/fcambus/spleen) License: BSD 2-clause. See `LICENSE-spleen`
+* [Unifont]() Add to copyright
+* [toit]() Add to copyright
+
+Vector fonts
+
+* [gridfont]()
+* [arcadefont]()
+
+
+## Installation
 
 You can install from [GitHub](https://github.com/coolbutuseless/bdftools) with:
 
