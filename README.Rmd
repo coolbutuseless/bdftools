@@ -59,29 +59,16 @@ library(grid)
 library(ggplot2)
 library(bdftools)
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Load a BDF font
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-fontfile <- system.file("fonts", "spleen-5x8.bdf", package = "bdftools", mustWork = TRUE)
-myfont <- read_bdf(fontfile)
+c("cozette_hidpi", "cozette", "creep2-11", "spleen-12x24", "spleen-16x32", 
+"spleen-32x64", "spleen-5x8", "spleen-6x12", "spleen-8x16")
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# By default, printing a font will print some header info, and a text 
-# sample rendered in that font in the console
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-myfont
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Generate some sample text in the console
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-create_matrix("Hello RStats", myfont) |> 
-  as.raster() |>
+create_raster("Hello #RStats!", "spleen-32x64") |> 
   plot(interpolate = FALSE)
 ```
 
 
 ```{r comment='', fig.height = 3}
-coords <- create_coords("Hello\n#RStats!", myfont)
+coords <- create_coords("Hello\n#RStats!", "creep2-11")
 head(coords)
 
 grid.newpage()
@@ -89,17 +76,6 @@ grid.rect(coords$x * 4, coords$y * 4, width = 3, height = 3, default.units = 'mm
           gp = gpar(fill = 'lightblue'))
 ```
 
-
-
-
-# An example of a larger font
-
-```{r comment=""}
-myfont <- bdftools::read_bdf_builtin("spleen-16x32.bdf")
-create_matrix("Frak!", myfont) |> 
-  as.raster() |>
-  plot(interpolate = FALSE)
-```
 
 
 
@@ -112,14 +88,15 @@ in `ggplot2`.
 library(ggplot2)
 library(bdftools)
 
-myfont <- read_bdf_builtin("cozette.bdf")
 
-plot_df <- as.data.frame(myfont)
-plot_df <- plot_df[plot_df$encoding >= utf8ToInt('A') & plot_df$encoding <= utf8ToInt('|'),]
+plot_df <- create_coords(paste(LETTERS, collapse = ""), "unifont")
+
+# plot_df <- as.data.frame(bdftools:::bdfs$cozette)
+# plot_df <- plot_df[plot_df$encoding >= utf8ToInt('A') & plot_df$encoding <= utf8ToInt('|'),]
 
 ggplot(plot_df) +
-  geom_tile(aes(x, y), width=0.9, height = 0.9, na.rm = TRUE) +
-  facet_wrap(~encoding + desc, ncol = 12)+
+  geom_tile(aes(x0, y0), width=0.9, height = 0.9, na.rm = TRUE) +
+  facet_wrap(~idx, ncol = 12)+
   theme_void(10) +
   coord_equal()
 ```

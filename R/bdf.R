@@ -75,6 +75,8 @@ create_coords_bdf <- function(text, font, line_height = NULL) {
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     this_bdf_char <- bdf$chars[[idx]]
     this_df      <- this_bdf_char$coords
+    this_df$x0   <- this_df$x
+    this_df$y0   <- this_df$y
     # If this is a 'space' then often this will have no coords
     if (!is.null(this_df) && nrow(this_df) > 0) {
       this_df$x    <- this_df$x + xoffset
