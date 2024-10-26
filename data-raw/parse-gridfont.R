@@ -301,8 +301,8 @@ smooth_df$y   <- 9 - smooth_df$y
 gridfont        <- original_df
 gridfont_smooth <- smooth_df
 
-usethis::use_data(gridfont, gridfont_smooth,
-                  internal = FALSE, overwrite = TRUE)
+# usethis::use_data(gridfont, gridfont_smooth,
+#                   internal = FALSE, overwrite = TRUE)
 
 
 

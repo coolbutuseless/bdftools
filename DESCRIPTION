@@ -6,8 +6,8 @@ Authors@R: c(
     person("Mike", "Cheng", role = c("aut", "cre", 'cph'), email = "mikefc@coolbutuseless.com"),
     person("Frederic", "Cambus", role = c("aut", "cph"), email = "fred@statdns.com", comment = "Creator of 'spleen' font"),
     person("Romeo", "Van Snick", role = c("aut", "cph"), email = "romeo@romeovansnick.be", comment = "Creator of 'creep' font"),
-    person("Slavfox", role = c("aut", "cph"), comment = "Creator of 'cozette' font")
-    )
+    person("Slavfox", role = c("aut", "cph"), comment = "Creator of 'cozette' font"),
+    person("GNU Unifont authors", role = "cph"))
 Maintainer: Mike Cheng <mikefc@coolbutuseless.com>
 Description: Alternate font rendering may be needed when rendering to novel
    graphics outputs where modern font rendering is not available or 
@@ -21,7 +21,8 @@ RoxygenNote: 7.3.2
 Copyright: The included 'spleen' fonts are BSD licensed and Copyright (c) 
     2018-2024, Frederic Cambus.  The included 'creep2' font is MIT licensed
     and Copyright (c) 2014 Romeo Van Snick.  The included 'Cozette' font is
-    MIT licensed and Copyright (c) 2020, Slavfox. 
+    MIT licensed and Copyright (c) 2020, Slavfox. The included 'unifont' font
+    is SIL Open Font Licensed, and is Copyright the GNU unifont authors.
     See 'COPYRIGHTS' file for more details.
 URL: https://github.com/coolbutuseless/bdftools
 BugReports: https://github.com/coolbutuseless/bdftools/issues

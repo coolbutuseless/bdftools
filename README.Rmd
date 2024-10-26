@@ -74,15 +74,21 @@ library(ggplot2)
 library(bdftools)
 
 c("cozette_hidpi", "cozette", "creep2-11", "spleen-12x24", "spleen-16x32", 
-"spleen-32x64", "spleen-5x8", "spleen-6x12", "spleen-8x16")
+"spleen-32x64", "spleen-5x8", "spleen-6x12", "spleen-8x16", "unifont")
 
-create_raster("Hello #RStats!", "spleen-32x64") |> 
+txt <- "Hello #RStats"
+txt <- "привет"
+txt <- "二項分布\xF0\x9F\x8E\xB2の英語表記は\n「Binomial distribution」である。"
+txt <- "a b c"
+
+
+bitmap_text_raster(txt, "unifont") |> 
   plot(interpolate = FALSE)
 ```
 
 
 ```{r comment='', fig.height = 3}
-coords <- create_coords("Hello\n#RStats!", "creep2-11")
+coords <- bitmap_text_coords("Hello\n#RStats!", "creep2-11")
 head(coords)
 
 grid.newpage()
@@ -102,8 +108,12 @@ in `ggplot2`.
 library(ggplot2)
 library(bdftools)
 
-
-plot_df <- create_coords(paste(LETTERS, collapse = ""), "unifont")
+txt <- "привет"
+txt <- "二項分布\xF0\x9F\x8E\xB2の英語表記は「Binomial distribution」である。"
+txt <- "a b c"
+plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "unifont")
+plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "spleen-32x64")
+plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "spleen-32x64")
 
 # plot_df <- as.data.frame(bdftools:::bdfs$cozette)
 # plot_df <- plot_df[plot_df$encoding >= utf8ToInt('A') & plot_df$encoding <= utf8ToInt('|'),]

@@ -2,10 +2,9 @@
 
 S3method(as.data.frame,bdf)
 S3method(as.data.frame,bdf_char)
-export(create_coords)
-export(create_matrix)
-export(create_raster)
-export(invert)
+export(bitmap_text_coords)
+export(bitmap_text_matrix)
+export(bitmap_text_raster)
 export(vector_text_coords)
 importFrom(grDevices,as.raster)
 importFrom(utils,head)

@@ -127,7 +127,7 @@ arcade <- arcade_df
 arcade$width  <- 10L
 arcade$height <- 10L
 arcade$stroke <- as.integer(arcade$stroke)
-usethis::use_data(arcade, internal = FALSE, overwrite = TRUE)
+# usethis::use_data(arcade, internal = FALSE, overwrite = TRUE)
 
 
 

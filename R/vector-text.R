@@ -2,17 +2,6 @@
 globalVariables(c('idx', 'x', 'xoffset', 'stroke'))
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Gridfont data
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-"gridfont"
-
-#' @rdname gridfont
-"gridfont_smooth"
-
-#' @rdname gridfont
-"arcade"
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create data.frame of glyph information for the given line of text.
 #'
@@ -35,9 +24,9 @@ vector_text_coords_single_row <- function(text, font, dx = 0) {
 
   font_df <- switch(
     font,
-    gridfont        = bdftools::gridfont,
-    gridfont_smooth = bdftools::gridfont_smooth,
-    arcade          = bdftools::arcade,
+    gridfont        = gridfont,
+    gridfont_smooth = gridfont_smooth,
+    arcade          = arcade,
     stop("No such font: ", font)
   )
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -138,9 +127,9 @@ vector_text_coords <- function(text, font = c('gridfont', 'gridfont_smooth', 'ar
 
   font_df <- switch(
     font,
-    gridfont        = bdftools::gridfont,
-    gridfont_smooth = bdftools::gridfont_smooth,
-    arcade          = bdftools::arcade,
+    gridfont        = gridfont,
+    gridfont_smooth = gridfont_smooth,
+    arcade          = arcade,
     stop("No such font: ", font)
   )
   

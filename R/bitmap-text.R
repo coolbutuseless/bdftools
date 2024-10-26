@@ -1,6 +1,5 @@
 
 
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create a data.frame of the given string and font
 #'
@@ -12,28 +11,7 @@
 #'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-create_coords <- function(text, font, line_height = NULL) {
-  
-  if (font %in% names(bdfs)) {
-    create_coords_bdf(text = text, font = font, line_height = line_height)
-  } else {
-    stop("Unknown font: ", font)
-  }
-  
-}
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a data.frame of the given string and font
-#'
-#' @param font bdf font name
-#' @param text text
-#' @param line_height height
-#'
-#' @return data.frame of x,y coordinates
-#'
-#' @noRd
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-create_coords_bdf <- function(text, font, line_height = NULL) {
+bitmap_text_coords <- function(text, font, line_height = NULL) {
   
   if (!font %in% names(bdfs)) {
     stop("No such bdf font: ", font)
@@ -64,9 +42,13 @@ create_coords_bdf <- function(text, font, line_height = NULL) {
     # Get the character data for the given utf8 code
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     idx <- bdf$idx[code + 1L]
-    if (is.null(idx) || is.na(idx)) {
-      idx <- bdf$font_info$default_char
+    if (is.null(idx) || is.na(idx) || idx > length(bdf$chars)) {
+      code <- bdf$font_info$default_char
+      idx <- bdf$idx[code + 1L]
     }
+    
+    # cat("idx / len = ", idx, length(bdf$chars), idx > length(bdf$chars), "\n")
+    # cat("def: ", bdf$font_info$default_char, "\n")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get this character
@@ -154,33 +136,14 @@ coords_to_mat <- function(df) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create a matrix of the given string and font
 #'
-#' @inheritParams create_coords
+#' @inheritParams bitmap_text_coords
 #'
 #' @return matrix
 #'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-create_matrix <- function(text, font, line_height = NULL) {
-  if (font %in% names(bdfs)) {
-    create_matrix_bdf(text = text, font = font, line_height = line_height)
-  } else {
-    stop("Unknown font: ", font)
-  }
-}
-
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a matrix of the given string and font
-#'
-#' @inheritParams create_coords
-#'
-#' @return matrix
-#'
-#' @noRd
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-create_matrix_bdf <- function(text, font, line_height = NULL) {
-  df <- create_coords(text, font, line_height = line_height)
+bitmap_text_matrix <- function(text, font, line_height = NULL) {
+  df <- bitmap_text_coords(text, font, line_height = line_height)
   coords_to_mat(df)  # invert black/white
 }
 
@@ -188,34 +151,19 @@ create_matrix_bdf <- function(text, font, line_height = NULL) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create a raster
 #' 
-#' @inheritParams create_coords
+#' @inheritParams bitmap_text_coords
 #' 
 #' @return raster
 #' @importFrom grDevices as.raster
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-create_raster <- function(text, font, line_height = NULL) {
-  if (font %in% names(bdfs)) {
-    mat <- create_matrix_bdf(text = text, font = font, line_height = line_height)
-    mat <- 1L - mat
-    grDevices::as.raster(mat)
-  } else {
-    stop("Unknown font: ", font)
-  }
+bitmap_text_raster <- function(text, font, line_height = NULL) {
+  mat <- bitmap_text_matrix(text = text, font = font, line_height = line_height)
+  mat <- 1L - mat
+  grDevices::as.raster(mat)
 }
 
 
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Invert a binary matrix
-#' @param mat matrix of just 0/1 values
-#' @return matrix with flipped bits
-#' @export
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-invert <- function(mat) {
-  stopifnot(is.matrix(mat))
-  1L - mat
-}
 
 
 
