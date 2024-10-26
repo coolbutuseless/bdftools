@@ -1,17 +1,29 @@
 Package: bdftools
 Type: Package
-Title: Tools for BDF Bitmap Fonts
+Title: Text Rendering with Bitmap and Vector Fonts
 Version: 0.1.2.9000
 Authors@R: c(
-    person("Mike", "Cheng", role = c("aut", "cre", 'cph'), email = "mikefc@coolbutuseless.com")
+    person("Mike", "Cheng", role = c("aut", "cre", 'cph'), email = "mikefc@coolbutuseless.com"),
+    person("Frederic", "Cambus", role = c("aut", "cph"), email = "fred@statdns.com", comment = "Creator of 'spleen' font"),
+    person("Romeo", "Van Snick", role = c("aut", "cph"), email = "romeo@romeovansnick.be", comment = "Creator of 'creep' font"),
+    person("Slavfox", role = c("aut", "cph"), comment = "Creator of 'cozette' font")
     )
 Maintainer: Mike Cheng <mikefc@coolbutuseless.com>
-Description: Tools for BDF bitmap fonts.
+Description: Alternate font rendering may be needed when rendering to novel
+   graphics outputs where modern font rendering is not available or 
+   not appropriate.  Bitmap and vector fonts allow for bespoke rendering using
+   pixel coordinates and line drawing.  A selection of fonts is included and
+   all can be rendered to a matrix of pixel locations or a returned as 
+   pixel coordinates pixels and stroke collections. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2
-Copyright: TODO
+Copyright: The included 'spleen' fonts are BSD licensed and Copyright (c) 
+    2018-2024, Frederic Cambus.  The included 'creep2' font is MIT licensed
+    and Copyright (c) 2014 Romeo Van Snick.  The included 'Cozette' font is
+    MIT licensed and Copyright (c) 2020, Slavfox. 
+    See 'COPYRIGHTS' file for more details.
 URL: https://github.com/coolbutuseless/bdftools
 BugReports: https://github.com/coolbutuseless/bdftools/issues
 VignetteBuilder: knitr

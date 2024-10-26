@@ -41,9 +41,9 @@ pkgdown::build_site(override = list(destination = "../coolbutuseless.github.io/p
 * `as.data.frame.bdf(bdf)` converts the full `bdf` font into a rectangular 
    data.frame of all characters and their (x, y) coordinates.
 * `read_bdf_builtin()` to read in a font included with this package:
-    * [Cozette](https://github.com/slavfox/Cozette) License: MIT. See `LICENSE-cozette`
+    * [Cozette v1.25.2](https://github.com/slavfox/Cozette) License: MIT. See `LICENSE-cozette`
     * [Creep2](https://github.com/raymond-w-ko/creep2) License: MIT. See `LICENSE-creep2`
-    * [Spleen](https://github.com/fcambus/spleen) License: BSD 2-clause. See `LICENSE-spleen`
+    * [Spleen v2.1.0](https://github.com/fcambus/spleen) License: BSD 2-clause. See `LICENSE-spleen`
 
 You can install from [GitHub](https://github.com/coolbutuseless/bdftools) with:
 
