@@ -247,12 +247,12 @@ parse_char <- function(txt, height) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   res <- list(
     desc     = substr(txt[1], start = 11, stop = nchar(txt[1])),
-    bitmap   = bitmap_ints,
+    # bitmap   = bitmap_ints,
     coords   = coords,
     encoding = encoding,
     dwidth   = dwidth,
-    bbox     = bbox,
-    raw      = txt
+    bbox     = bbox
+    # raw      = txt
   )
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

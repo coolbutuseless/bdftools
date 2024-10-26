@@ -14,4 +14,4 @@ bdfs <- lapply(bdf_files, bdftools:::read_bdf) |>
 
 
 
-usethis::use_data(bdfs, overwrite = TRUE, internal = TRUE, compress = 'xz')
+usethis::use_data(bdfs, overwrite = TRUE, internal = TRUE, compress = 'bzip2')
