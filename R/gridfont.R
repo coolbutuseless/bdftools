@@ -10,11 +10,13 @@ globalVariables(c('idx', 'x', 'xoffset', 'stroke'))
 #' @rdname gridfont
 "gridfont_smooth"
 
+#' @rdname gridfont
+"arcade"
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create data.frame of glyph information for the given line of text.
 #'
-#' @inheritParams create_coords_gridfont
+#' @inheritParams vector_text_coords
 #'
 #' @return data.frame with coordinates for all the glyphs with characters offset
 #'        appropriately.  \code{char_idx} is the index of the character within
@@ -22,7 +24,7 @@ globalVariables(c('idx', 'x', 'xoffset', 'stroke'))
 #'
 #' @importFrom utils head
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-create_coords_gridfont_single_row <- function(text, font = 'original', dx = 0) {
+vector_text_coords_single_row <- function(text, font, dx = 0) {
 
   stopifnot(length(text) == 1)
 
@@ -33,8 +35,9 @@ create_coords_gridfont_single_row <- function(text, font = 'original', dx = 0) {
 
   font_df <- switch(
     font,
-    original = bdftools::gridfont,
-    smooth   = bdftools::gridfont_smooth,
+    gridfont        = bdftools::gridfont,
+    gridfont_smooth = bdftools::gridfont_smooth,
+    arcade          = bdftools::arcade,
     stop("No such font: ", font)
   )
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -102,7 +105,7 @@ create_coords_gridfont_single_row <- function(text, font = 'original', dx = 0) {
 #'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-create_coords_gridfont <- function(text, font = c('original', 'smooth'), dx = 0, dy = 0) {
+vector_text_coords <- function(text, font = c('gridfont', 'gridfont_smooth', 'arcade'), dx = 0, dy = 0) {
 
   stopifnot(length(text) == 1)
   font <- match.arg(font)
@@ -116,7 +119,7 @@ create_coords_gridfont <- function(text, font = c('original', 'smooth'), dx = 0,
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Create a string for each line
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  dfs <- lapply(texts, create_coords_gridfont_single_row, font=font, dx = dx)
+  dfs <- lapply(texts, vector_text_coords_single_row, font = font, dx = dx)
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Update line numbering and character indices
@@ -142,7 +145,7 @@ create_coords_gridfont <- function(text, font = c('original', 'smooth'), dx = 0,
 
 if (FALSE) {
   library(ggplot2)
-  plot_df <- create_coords_gridfont('Country Road\nTake me Home', font='smooth')
+  plot_df <- vector_text_coords('Country Road\nTake me Home', font='arcade')
 
   ggplot(plot_df, aes(x, y)) +
     geom_path(aes(group = interaction(char_idx, stroke)), na.rm=TRUE) +

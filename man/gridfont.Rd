@@ -4,16 +4,21 @@
 \name{gridfont}
 \alias{gridfont}
 \alias{gridfont_smooth}
+\alias{arcade}
 \title{Gridfont data}
 \format{
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 438 rows and 7 columns.
 
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 696 rows and 7 columns.
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 366 rows and 7 columns.
 }
 \usage{
 gridfont
 
 gridfont_smooth
+
+arcade
 }
 \description{
 Gridfont data
