@@ -14,25 +14,11 @@ bdfGrob(
   rot = 0,
   default.units = "points",
   name = NULL,
-  gp = NULL,
   size = 2,
   shrink = 0.9,
   wrap = FALSE,
   width = 12,
-  col = "black",
-  fill = "black",
-  alpha,
-  lty,
-  lwd,
-  lex,
-  lineend,
-  linejoin,
-  linemitre,
-  fontsize,
-  cex,
-  fontfamily,
-  fontface,
-  lineheight
+  gp = gpar(col = "black", fill = "black")
 )
 }
 \arguments{
@@ -45,8 +31,6 @@ bdfGrob(
 \item{wrap}{use \code{strwrap()} to wrap text into lines? Default: TRUE}
 
 \item{width}{number of characters to use when wrap = TRUE. default: 12}
-
-\item{col, fill, alpha, lty, lwd, lex, lineend, linejoin, linemitre, fontsize, cex, fontfamily, fontface, lineheight}{See documentation for \code{grid::gpar()}}
 }
 \value{
 grid grob object

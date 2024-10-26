@@ -411,7 +411,7 @@ if (FALSE) {
   library(grid)
   # bdf_file <- "./working/spleen-32x64.bdf"
   # bdf_file <- "./working/tom-thumb.bdf"
-  bdf_file <- "./working/creep2-11.bdf"
+  bdf_file <- "./inst/fonts/creep2-11.bdf"
   # bdf_file <- "./working/spleen-5x8.bdf"
   myfont <- NULL
   myfont <- read_bdf(bdf_file)
@@ -426,8 +426,7 @@ if (FALSE) {
     width = 12,
     gp = gpar(fill=viridis::viridis(50), lwd = 0.1),
     size = 5,
-    shrink = 0.7,
-    vp = viewport(angle = 0)
+    shrink = 0.7
   )
   grid.newpage(); grid.draw(grob)
 
