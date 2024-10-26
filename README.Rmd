@@ -32,29 +32,39 @@ pkgdown::build_site(override = list(destination = "../coolbutuseless.github.io/p
 ### What's in the box
 
 * Bitmap fonts
-    * `bitmap_text_coords()`
-    * `bitmap_text_matrix()`
-    * `bitmap_text_raster()`
+    * `bitmap_text_coords()` returns a data.frame of pixel locations
+    * `bitmap_text_matrix()` returns a binary matrix with pixel locations set to 1
+    * `bitmap_text_raster()` returns a raster image of the text
 * Vector font
-    * `vector_text_coords()`
-    * `vector_text_matrix()`
-    * `vector_text_raster()`
-* Hide these as internal data
-    * `gridfont`, `gridfont_smooth`, `arcade`
+    * `vector_text_coords()` returns a data.frame of strokes
+    * `vector_text_matrix()` returns a binary matrix with pixel locations set to 1
+    * `vector_text_raster()` returns a raster image of the text
 
 ### Fonts
 
+
+| Type   | Name            | Sizes                         | Unicode?              | # glyphs |
+|--------|-----------------|-------------------------------|-----------------------|----------|
+| Bitmap | Cozette         | 20x12 ??                      | Some                  | 3536     |
+| Bitmap | Creep2          | 11x11 ??                      | Some                  | 508      |
+| Bitmap | Spleen          | 5x8, 6x12, 8x16, 12x24, 16x32 | Some                  | 450-1000 |
+| Bitmap | Unifont         | 16x16                         | Yes!                  | 57086    |
+| Vector | gridfont        |                               | ASCII only            |          |
+| Vector | gridfont_smooth |                               | ASCII only            |          |
+| Vector | arcade          |                               | Upper case ASCII only |          |
+
+
 Bitmap fonts:
 
-* [Cozette v1.25.2](https://github.com/slavfox/Cozette) License: MIT. See `LICENSE-cozette`
-* [Creep2](https://github.com/raymond-w-ko/creep2) License: MIT. See `LICENSE-creep2`
-* [Spleen v2.1.0](https://github.com/fcambus/spleen) License: BSD 2-clause. See `LICENSE-spleen`
-* [Unifont]() Add to copyright
+* [Cozette v1.25.2](https://github.com/slavfox/Cozette) License: MIT. See `LICENSE-cozette.txt`
+* [Creep2](https://github.com/raymond-w-ko/creep2) License: MIT. See `LICENSE-creep2.txt`
+* [Spleen v2.1.0](https://github.com/fcambus/spleen) License: BSD 2-clause. See `LICENSE-spleen.txt`
+* [Unifont](https://unifoundry.com/unifont/) License: SIL Open Font License (OFL) version 1.1. See `LICENSE-unifont.txt`
 
 Vector fonts
 
-* [gridfont]()
-* [arcadefont]()
+* [gridfont](https://github.com/inconvergent/gridfont) License: MIT. See `LICENSE-gridfont.txt`
+* `arcade` is a vector font I created. License: SIL Open Font License (OFL) version 1.1. See `LICENSE-arcade.txt`
 
 
 ## Installation
@@ -79,7 +89,6 @@ c("cozette_hidpi", "cozette", "creep2-11", "spleen-12x24", "spleen-16x32",
 txt <- "Hello #RStats"
 txt <- "привет"
 txt <- "二項分布\xF0\x9F\x8E\xB2の英語表記は\n「Binomial distribution」である。"
-txt <- "a b c"
 
 
 bitmap_text_raster(txt, "unifont") |> 
@@ -99,7 +108,7 @@ grid.rect(coords$x * 4, coords$y * 4, width = 3, height = 3, default.units = 'mm
 
 
 
-## Font sample sheet
+## Bit map font - sample sheet
 
 An example of how the data.frame representation of the font can be plotted 
 in `ggplot2`.
@@ -123,6 +132,19 @@ ggplot(plot_df) +
   facet_wrap(~idx, ncol = 12)+
   theme_void(10) +
   coord_equal()
+```
+
+
+## Vector Font
+
+```{r}
+df <- vector_text_coords('Hello', font = 'gridfont')
+df
+
+vector_text_matrix('Hello', font = 'gridfont', scale = 1)
+
+ras <- vector_text_raster('Hello', font = 'gridfont', scale = 10)
+plot(ras, interpolate = FALSE)
 ```
 
 

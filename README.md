@@ -13,24 +13,48 @@ BDF bitmap fonts.
 
 ### What’s in the box
 
-- `read_bdf(filename)` reads a BDF pixel font file into an R
-  representation i.e. an object of class `bdf`
-- `print.bdf()` prints meta information and a font sample.
-- `bdf_create_df(bdf, text)` Create a data.frame of points for the given
-  string
-- `bdf_create_mat(bdf, text)` Create a matrix representation for the
-  given string
-- `bdfGrob(bdf, text, ...)` create a simple grob representation of the
-  given string using squares for pixels
-- `as.data.frame.bdf(bdf)` converts the full `bdf` font into a
-  rectangular data.frame of all characters and their (x, y) coordinates.
-- `read_bdf_builtin()` to read in a font included with this package:
-  - [Cozette](https://github.com/slavfox/Cozette) License: MIT. See
-    `LICENSE-cozette`
-  - [Creep2](https://github.com/raymond-w-ko/creep2) License: MIT. See
-    `LICENSE-creep2`
-  - [Spleen](https://github.com/fcambus/spleen) License: BSD 2-clause.
-    See `LICENSE-spleen`
+- Bitmap fonts
+  - `bitmap_text_coords()` returns a data.frame of pixel locations
+  - `bitmap_text_matrix()` returns a binary matrix with pixel locations
+    set to 1
+  - `bitmap_text_raster()` returns a raster image of the text
+- Vector font
+  - `vector_text_coords()` returns a data.frame of strokes
+  - `vector_text_matrix()` returns a binary matrix with pixel locations
+    set to 1
+  - `vector_text_raster()` returns a raster image of the text
+
+### Fonts
+
+| Type | Name | Sizes | Unicode? | \# glyphs |
+|----|----|----|----|----|
+| Bitmap | Cozette | 20x12 ?? | Some | 3536 |
+| Bitmap | Creep2 | 11x11 ?? | Some | 508 |
+| Bitmap | Spleen | 5x8, 6x12, 8x16, 12x24, 16x32 | Some | 450-1000 |
+| Bitmap | Unifont | 16x16 | Yes! | 57086 |
+| Vector | gridfont |  | ASCII only |  |
+| Vector | gridfont_smooth |  | ASCII only |  |
+| Vector | arcade |  | Upper case ASCII only |  |
+
+Bitmap fonts:
+
+- [Cozette v1.25.2](https://github.com/slavfox/Cozette) License: MIT.
+  See `LICENSE-cozette.txt`
+- [Creep2](https://github.com/raymond-w-ko/creep2) License: MIT. See
+  `LICENSE-creep2.txt`
+- [Spleen v2.1.0](https://github.com/fcambus/spleen) License: BSD
+  2-clause. See `LICENSE-spleen.txt`
+- [Unifont](https://unifoundry.com/unifont/) License: SIL Open Font
+  License (OFL) version 1.1. See `LICENSE-unifont.txt`
+
+Vector fonts
+
+- [gridfont](https://github.com/inconvergent/gridfont) License: MIT. See
+  `LICENSE-gridfont.txt`
+- `arcade` is a vector font I created. License: SIL Open Font License
+  (OFL) version 1.1. See `LICENSE-arcade.txt`
+
+## Installation
 
 You can install from
 [GitHub](https://github.com/coolbutuseless/bdftools) with:
@@ -47,65 +71,40 @@ library(grid)
 library(ggplot2)
 library(bdftools)
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Load a BDF font
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-fontfile <- system.file("fonts", "spleen-5x8.bdf", package = "bdftools", mustWork = TRUE)
-myfont <- read_bdf(fontfile)
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# By default, printing a font will print some header info, and a text 
-# sample rendered in that font in the console
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-myfont
+c("cozette_hidpi", "cozette", "creep2-11", "spleen-12x24", "spleen-16x32", 
+"spleen-32x64", "spleen-5x8", "spleen-6x12", "spleen-8x16", "unifont")
 ```
 
-    $size
-    [1] 8
-
-    $bbox
-    [1]  5  8  0 -1
-
-    $pixel_size
-    [1] 8
-
-    $font_descent
-    [1] 1
-
-    $font_ascent
-    [1] 7
-
-    $default_char
-    [1] 32
-
-    $line_height
-    [1] 8
+     [1] "cozette_hidpi" "cozette"       "creep2-11"     "spleen-12x24" 
+     [5] "spleen-16x32"  "spleen-32x64"  "spleen-5x8"    "spleen-6x12"  
+     [9] "spleen-8x16"   "unifont"      
 
 ``` r
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Generate some sample text in the console
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-create_matrix("Hello RStats", myfont) |> 
-  as.raster() |>
+txt <- "Hello #RStats"
+txt <- "привет"
+txt <- "二項分布\xF0\x9F\x8E\xB2の英語表記は\n「Binomial distribution」である。"
+
+
+bitmap_text_raster(txt, "unifont") |> 
   plot(interpolate = FALSE)
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
 ``` r
-coords <- create_coords("Hello\n#RStats!", myfont)
+coords <- bitmap_text_coords("Hello\n#RStats!", "creep2-11")
 head(coords)
 ```
 
-    # A tibble: 6 × 3
-          x     y   idx
-      <dbl> <dbl> <int>
-    1     4    14     1
-    2     1    14     1
-    3     4    13     1
-    4     1    13     1
-    5     4    12     1
-    6     3    12     1
+    # A tibble: 6 × 5
+          x     y    x0    y0   idx
+      <dbl> <dbl> <int> <int> <int>
+    1     4    18     4     7     1
+    2     1    18     1     7     1
+    3     4    17     4     6     1
+    4     1    17     1     6     1
+    5     4    16     4     5     1
+    6     3    16     3     5     1
 
 ``` r
 grid.newpage()
@@ -115,18 +114,7 @@ grid.rect(coords$x * 4, coords$y * 4, width = 3, height = 3, default.units = 'mm
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
-# An example of a larger font
-
-``` r
-myfont <- bdftools::read_bdf_builtin("spleen-16x32.bdf")
-create_matrix("Frak!", myfont) |> 
-  as.raster() |>
-  plot(interpolate = FALSE)
-```
-
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
-
-## Font sample sheet
+## Bit map font - sample sheet
 
 An example of how the data.frame representation of the font can be
 plotted in `ggplot2`.
@@ -135,16 +123,88 @@ plotted in `ggplot2`.
 library(ggplot2)
 library(bdftools)
 
-myfont <- read_bdf_builtin("cozette.bdf")
+txt <- "привет"
+txt <- "二項分布\xF0\x9F\x8E\xB2の英語表記は「Binomial distribution」である。"
+txt <- "a b c"
+plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "unifont")
+plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "spleen-32x64")
+plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "spleen-32x64")
 
-plot_df <- as.data.frame(myfont)
-plot_df <- plot_df[plot_df$encoding >= utf8ToInt('A') & plot_df$encoding <= utf8ToInt('|'),]
+# plot_df <- as.data.frame(bdftools:::bdfs$cozette)
+# plot_df <- plot_df[plot_df$encoding >= utf8ToInt('A') & plot_df$encoding <= utf8ToInt('|'),]
 
 ggplot(plot_df) +
-  geom_tile(aes(x, y), width=0.9, height = 0.9, na.rm = TRUE) +
-  facet_wrap(~encoding + desc, ncol = 12)+
+  geom_tile(aes(x0, y0), width=0.9, height = 0.9, na.rm = TRUE) +
+  facet_wrap(~idx, ncol = 12)+
   theme_void(10) +
   coord_equal()
+```
+
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+
+## Vector Font
+
+``` r
+df <- vector_text_coords('Hello', font = 'gridfont')
+df
+```
+
+    #>    char_idx char stroke  x y idx width height xoffset line
+    #> 1         1    h      1  0 6   1     4      9       0    1
+    #> 2         1    h      1  0 0   2     4      9       0    1
+    #> 3         1    h      2  0 3   1     4      9       0    1
+    #> 4         1    h      2  1 4   2     4      9       0    1
+    #> 5         1    h      2  2 4   3     4      9       0    1
+    #> 6         1    h      2  3 3   4     4      9       0    1
+    #> 7         1    h      2  3 0   5     4      9       0    1
+    #> 8         2    e      1  5 2   1     4      9       4    1
+    #> 9         2    e      1  6 2   2     4      9       4    1
+    #> 10        2    e      1  7 3   3     4      9       4    1
+    #> 11        2    e      1  6 4   4     4      9       4    1
+    #> 12        2    e      1  5 4   5     4      9       4    1
+    #> 13        2    e      1  4 3   6     4      9       4    1
+    #> 14        2    e      1  4 1   7     4      9       4    1
+    #> 15        2    e      1  5 0   8     4      9       4    1
+    #> 16        2    e      1  6 0   9     4      9       4    1
+    #> 17        2    e      1  7 1  10     4      9       4    1
+    #> 18        3    l      1  8 6   1     1      9       8    1
+    #> 19        3    l      1  8 0   2     1      9       8    1
+    #> 20        4    l      1  9 6   1     1      9       9    1
+    #> 21        4    l      1  9 0   2     1      9       9    1
+    #> 22        5    o      1 13 3   1     4      9      10    1
+    #> 23        5    o      1 12 4   2     4      9      10    1
+    #> 24        5    o      1 11 4   3     4      9      10    1
+    #> 25        5    o      1 10 3   4     4      9      10    1
+    #> 26        5    o      1 10 1   5     4      9      10    1
+    #> 27        5    o      1 11 0   6     4      9      10    1
+    #> 28        5    o      1 12 0   7     4      9      10    1
+    #> 29        5    o      1 13 1   8     4      9      10    1
+    #> 30        5    o      1 13 3   9     4      9      10    1
+
+``` r
+vector_text_matrix('Hello', font = 'gridfont', scale = 1)
+```
+
+    #>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]
+    #> [1,]    1    0    0    0    0    0    0    0    0     0     1     0     1     0
+    #> [2,]    1    0    0    0    0    0    0    0    0     0     1     0     1     0
+    #> [3,]    1    1    1    0    0    0    1    1    0     0     1     0     1     0
+    #> [4,]    1    0    0    1    0    1    0    0    1     0     1     0     1     0
+    #> [5,]    1    0    0    1    0    1    1    1    0     0     1     0     1     0
+    #> [6,]    1    0    0    1    0    1    0    0    1     0     1     0     1     0
+    #> [7,]    1    0    0    1    0    0    1    1    0     0     1     0     1     0
+    #>      [,15] [,16] [,17] [,18]
+    #> [1,]     0     0     0     0
+    #> [2,]     0     0     0     0
+    #> [3,]     0     1     1     0
+    #> [4,]     1     0     0     1
+    #> [5,]     1     0     0     1
+    #> [6,]     1     0     0     1
+    #> [7,]     0     1     1     0
+
+``` r
+ras <- vector_text_raster('Hello', font = 'gridfont', scale = 10)
+plot(ras, interpolate = FALSE)
 ```
 
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />

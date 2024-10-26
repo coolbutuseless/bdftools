@@ -7,7 +7,7 @@ Authors@R: c(
     person("Frederic", "Cambus", role = c("aut", "cph"), email = "fred@statdns.com", comment = "Creator of 'spleen' font"),
     person("Romeo", "Van Snick", role = c("aut", "cph"), email = "romeo@romeovansnick.be", comment = "Creator of 'creep' font"),
     person("Slavfox", role = c("aut", "cph"), comment = "Creator of 'cozette' font"),
-    person("GNU Unifont authors", role = "cph"))
+    person("GNU Unifont authors", role = "cph", comment = "Creators of 'unifont'"))
 Maintainer: Mike Cheng <mikefc@coolbutuseless.com>
 Description: Alternate font rendering may be needed when rendering to novel
    graphics outputs where modern font rendering is not available or 
