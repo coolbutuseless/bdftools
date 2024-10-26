@@ -124,8 +124,9 @@ arcade_df <- point_sets_to_df(arcode_font_point_sets)
 arcade_df <- as_tibble(arcade_df)
 
 arcade <- arcade_df
-arcade$width  <- 9L
-arcade$height <- 9L
+arcade$width  <- 10L
+arcade$height <- 10L
+arcade$stroke <- as.integer(arcade$stroke)
 usethis::use_data(arcade, internal = FALSE, overwrite = TRUE)
 
 

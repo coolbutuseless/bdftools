@@ -43,7 +43,11 @@ vector_text_coords_single_row <- function(text, font, dx = 0) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # split text into characters
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  text <- tolower(text)
+  if (font == 'arcade') {
+    text <- toupper(text)
+  } else {
+    text <- tolower(text)
+  }
   text <- strsplit(text, '')[[1]]
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -132,11 +136,20 @@ vector_text_coords <- function(text, font = c('gridfont', 'gridfont_smooth', 'ar
     }
   }
 
+  font_df <- switch(
+    font,
+    gridfont        = bdftools::gridfont,
+    gridfont_smooth = bdftools::gridfont_smooth,
+    arcade          = bdftools::arcade,
+    stop("No such font: ", font)
+  )
+  
+  
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # combined all data.frames for each line, offset the y for each line
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   res <- do.call(rbind, dfs)
-  res$y <- res$y - (res$line - 1) * (8 + dy)
+  res$y <- res$y - (res$line - 1) * (font_df$height[1] + dy)
 
   res
 }
@@ -145,7 +158,7 @@ vector_text_coords <- function(text, font = c('gridfont', 'gridfont_smooth', 'ar
 
 if (FALSE) {
   library(ggplot2)
-  plot_df <- vector_text_coords('Country Road\nTake me Home', font='arcade')
+  plot_df <- vector_text_coords('Country Road\nTake me Home', font='gridfont_smooth')
 
   ggplot(plot_df, aes(x, y)) +
     geom_path(aes(group = interaction(char_idx, stroke)), na.rm=TRUE) +
