@@ -4,7 +4,7 @@
 \alias{bitmap_text_coords}
 \title{Create a data.frame of the given string and font}
 \usage{
-bitmap_text_coords(text, font, line_height = NULL)
+bitmap_text_coords(text, font = "unifont", line_height = NULL)
 }
 \arguments{
 \item{text}{text}

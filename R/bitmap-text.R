@@ -4,7 +4,6 @@
 #' 
 #' Currently on includes font names and unicode codepoints available within
 #' each font
-#' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 "font_info"
 

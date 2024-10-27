@@ -2,10 +2,14 @@
 source("data-raw/parse-arcade.R")
 source("data-raw/parse-bdfs.R")
 source("data-raw/parse-gridfont.R")
+source("data-raw/parse-hex.R")
 
 
 # usethis::use_data(bdfs, overwrite = TRUE, internal = TRUE, compress = 'bzip2')
 # usethis::use_data(arcade, internal = FALSE, overwrite = TRUE)
+
+bdfs$unscii8thin <- unscii_8_thin
+
 
 usethis::use_data(
   bdfs,

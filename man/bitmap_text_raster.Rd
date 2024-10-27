@@ -4,7 +4,7 @@
 \alias{bitmap_text_raster}
 \title{Create a raster}
 \usage{
-bitmap_text_raster(text, font, line_height = NULL)
+bitmap_text_raster(text, font = "unifont", scale = 1, line_height = NULL)
 }
 \arguments{
 \item{text}{text}

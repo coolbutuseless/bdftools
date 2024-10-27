@@ -29,42 +29,46 @@ hex8_to_coords <- function(hex) {
 }
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Load hexfile and split codepoint from hex
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-hex_file <- "data-raw/unscii/unscii-8-thin.hex"
-hex_raw  <- readLines(hex_file) 
-hex_raw  <- strsplit(hex_raw, ":")
 
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Convert hex to data.frames
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-chars <- lapply(hex_raw, \(hr) {
-  hex <- hr[2]
+read_hex8 <- function(hex_file) {
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Load hexfile and split codepoint from hex
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  hex_raw  <- readLines(hex_file) 
+  hex_raw  <- strsplit(hex_raw, ":")
+  
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Convert hex to data.frames
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  chars <- lapply(hex_raw, \(hr) {
+    hex <- hr[2]
+    list(
+      coords = hex8_to_coords(hex),
+      dwidth = 8L
+    )
+  })
+  
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Convert codes to index into 'chars'
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  codes <- vapply(hex_raw, \(x) x[1], character(1))
+  codes <- strtoi(codes, base = 16)
+  
+  max_code <- max(codes)
+  idx <- rep(NA_integer_, max_code+1L)
+  
+  idx[codes + 1] <- seq_along(codes)
+  
   list(
-    coords = hex8_to_coords(hex),
-    dwidth = 8L
+    chars = chars, 
+    idx   = idx
   )
-})
+  
+}
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Convert codes to index into 'chars'
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-codes <- vapply(hex_raw, \(x) x[1], character(1))
-codes <- strtoi(codes, base = 16)
-
-max_code <- max(codes)
-idx <- rep(NA_integer_, max_code+1L)
-
-idx[codes + 1] <- seq_along(codes)
-
-list(
-  chars = chars, 
-  idx   = idx
-)
-
-
-
+unscii_8_thin <- read_hex8("data-raw/unscii/unscii-8-thin.hex")
 
