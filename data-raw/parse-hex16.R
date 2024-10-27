@@ -1,7 +1,6 @@
 
 
 
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Byte to coordinate lookup
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -12,36 +11,17 @@ xs <- lapply(0:255, \(i) {
 )
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Convert 8 byte hex to a data.frame of coordinates
+# Convert 16 byte hex to a data.frame of coordinates
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-hex8_to_coords <- function(hex) {
-  hex <- stringr::str_sub(hex, seq(1, 15, 2), seq(2, 16, 2))
-  coords <- lapply(8:1, \(i) {
+hex16_to_coords <- function(hex) {
+  
+  hex <- stringr::str_sub(hex, seq(1, 31, 2), seq(2, 32, 2))
+  coords <- lapply(16:1, \(i) {
     x <- xs[[hex[[i]]]]
     if (length(x) == 0) {
       data.frame(x = integer(0), y = integer(0))
     } else {
-      data.frame(x = x, y = 9L - i)
-    }
-  }) 
-  char_coords <- do.call(rbind, coords)
-  char_coords
-}
-
-
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Convert 8 byte hex to a data.frame of coordinates
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-hex8_to_coords <- function(hex) {
-  hex <- stringr::str_sub(hex, seq(1, 15, 2), seq(2, 16, 2))
-  coords <- lapply(8:1, \(i) {
-    x <- xs[[hex[[i]]]]
-    if (length(x) == 0) {
-      data.frame(x = integer(0), y = integer(0))
-    } else {
-      data.frame(x = x, y = 9L - i)
+      data.frame(x = x, y = 17L - i)
     }
   }) 
   char_coords <- do.call(rbind, coords)
@@ -52,7 +32,7 @@ hex8_to_coords <- function(hex) {
 
 
 
-read_hex8 <- function(hex_file) {
+read_hex16 <- function(hex_file) {
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Load hexfile and split codepoint from hex
@@ -67,7 +47,7 @@ read_hex8 <- function(hex_file) {
   chars <- lapply(hex_raw, \(hr) {
     hex <- hr[2]
     list(
-      coords = hex8_to_coords(hex),
+      coords = hex16_to_coords(hex),
       dwidth = 8L
     )
   })
@@ -94,20 +74,14 @@ read_hex8 <- function(hex_file) {
 
 
 
-# hex8_files <- list.files("data-raw/unscii/", pattern = "unscii-8", full.names = TRUE)
-# hex8_names <- basename(hex8_files) |> tools::file_path_sans_ext()
+# hex16_files <- list.files("data-raw/unscii/", pattern = "unscii-16", full.names = TRUE)
+# hex16_names <- basename(hex16_files) |> tools::file_path_sans_ext()
 
 
 
+hex_file <- "data-raw/unscii/unscii-16.hex"
 
-
-unscii_8         <- read_hex8("data-raw/unscii/unscii-8.hex")
-# unscii_8_alt     <- read_hex8("data-raw/unscii/unscii-8-alt.hex")
-# unscii_8_fantasy <- read_hex8("data-raw/unscii/unscii-8-fantasy.hex")
-# unscii_8_mcr     <- read_hex8("data-raw/unscii/unscii-8-mcr.hex")
-# unscii_8_tall    <- read_hex8("data-raw/unscii/unscii-8-tall.hex")
-unscii_8_thin    <- read_hex8("data-raw/unscii/unscii-8-thin.hex")
-
+unscii_16 <- read_hex16(hex_file)
 
 
 

@@ -60,7 +60,7 @@ bitmap_text_coords <- function(text, font = "unifont", line_height = NULL) {
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     idx <- bdf$idx[code + 1L]
     if (is.null(idx) || is.na(idx) || idx > length(bdf$chars)) {
-      code <- bdf$font_info$default_char
+      code <- bdf$font_info$default_char %||% 63 # Default to question mark
       idx <- bdf$idx[code + 1L]
     }
     

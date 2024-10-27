@@ -8,7 +8,9 @@ source("data-raw/parse-hex.R")
 # usethis::use_data(bdfs, overwrite = TRUE, internal = TRUE, compress = 'bzip2')
 # usethis::use_data(arcade, internal = FALSE, overwrite = TRUE)
 
-bdfs$unscii8thin <- unscii_8_thin
+bdfs[['unscii-8']]      <- unscii_8
+bdfs[['unscii-8-thin']] <- unscii_8_thin
+bdfs[['unscii-16']]     <- unscii_16
 
 
 usethis::use_data(
