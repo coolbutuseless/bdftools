@@ -1,13 +1,21 @@
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Font information
+#' 
+#' Currently on includes font names and unicode codepoints available within
+#' each font
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"font_info"
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Bitmap font names
+# Bitmap font names
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 bitmap_fonts <- c(
+  "unifont",
   "cozette", 
   "creep2-11", 
-  "spleen-5x8", "spleen-6x12", "spleen-8x16", "spleen-12x24", "spleen-16x32", "spleen-32x64", 
-  "unifont"
+  "spleen-5x8", "spleen-6x12", "spleen-8x16", "spleen-12x24", "spleen-16x32", "spleen-32x64"
 )
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -21,7 +29,7 @@ bitmap_fonts <- c(
 #'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bitmap_text_coords <- function(text, font, line_height = NULL) {
+bitmap_text_coords <- function(text, font = "unifont", line_height = NULL) {
   
   if (!font %in% names(bdfs)) {
     stop("No such bdf font: ", font)
@@ -147,14 +155,26 @@ coords_to_mat <- function(df) {
 #' Create a matrix of the given string and font
 #'
 #' @inheritParams bitmap_text_coords
+#' @param scale Integer size scale factor. Default: 1.  Must be an integer value >= 1.
+#'        Scale up the matrix or raster result by this factor
 #'
 #' @return matrix
 #'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bitmap_text_matrix <- function(text, font, line_height = NULL) {
+bitmap_text_matrix <- function(text, font = "unifont", scale = 1, line_height = NULL) {
+  
+  scale <- as.integer(scale)
+  stopifnot(scale >= 1)
+  
   df <- bitmap_text_coords(text, font, line_height = line_height)
-  coords_to_mat(df)  # invert black/white
+  mat <- coords_to_mat(df)  
+  
+  if (scale > 1) {
+    mat <- kronecker(mat, matrix(1L, scale, scale))
+  }
+  
+  mat
 }
 
 
@@ -167,8 +187,8 @@ bitmap_text_matrix <- function(text, font, line_height = NULL) {
 #' @importFrom grDevices as.raster
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bitmap_text_raster <- function(text, font, line_height = NULL) {
-  mat <- bitmap_text_matrix(text = text, font = font, line_height = line_height)
+bitmap_text_raster <- function(text, font = "unifont", scale = 1, line_height = NULL) {
+  mat <- bitmap_text_matrix(text = text, font = font, scale = scale, line_height = line_height)
   mat <- 1L - mat
   grDevices::as.raster(mat)
 }

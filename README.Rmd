@@ -49,8 +49,8 @@ pkgdown::build_site(override = list(destination = "../coolbutuseless.github.io/p
 | Bitmap | Creep2          | 11x11 ??                      | Some                  | 508      |
 | Bitmap | Spleen          | 5x8, 6x12, 8x16, 12x24, 16x32 | Some                  | 450-1000 |
 | Bitmap | Unifont         | 16x16                         | Yes!                  | 57086    |
-| Vector | gridfont        |                               | ASCII only            |          |
-| Vector | gridfont_smooth |                               | ASCII only            |          |
+| Vector | gridfont        |                               | Lower ASCII only      |          |
+| Vector | gridfont_smooth |                               | Lower ASCII only      |          |
 | Vector | arcade          |                               | Upper case ASCII only |          |
 
 
@@ -143,10 +143,26 @@ df
 
 vector_text_matrix('Hello', font = 'gridfont', scale = 1)
 
-ras <- vector_text_raster('Hello', font = 'gridfont', scale = 10)
+ras <- vector_text_raster('Hello\n#RStats!', font = 'gridfont_smooth', scale = 30)
 plot(ras, interpolate = FALSE)
 ```
 
+
+## Font Sheets
+
+```{r}
+lo <- utf8ToInt('!')
+hi <- utf8ToInt('z')
+txt <- intToUtf8(seq(lo, hi))
+
+coords <- bitmap_text_coords(txt, "spleen-6x12")
+
+ggplot(coords) +
+  geom_tile(aes(x0, y0), width=0.9, height = 0.9, na.rm = TRUE) +
+  facet_wrap(~idx, ncol = 12)+
+  theme_void(10) +
+  coord_equal()
+```
 
 
 
