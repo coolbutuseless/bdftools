@@ -6,16 +6,14 @@ source("data-raw/parse-hex-8x8.R")
 source("data-raw/parse-hex-8x16.R")
 
 
-# usethis::use_data(bdfs, overwrite = TRUE, internal = TRUE, compress = 'bzip2')
-# usethis::use_data(arcade, internal = FALSE, overwrite = TRUE)
 
-bdfs[['unscii-8']]      <- unscii_8
-bdfs[['unscii-8-thin']] <- unscii_8_thin
-bdfs[['unscii-16']]     <- unscii_16
+bitmaps[['unscii-8']]      <- unscii_8
+bitmaps[['unscii-8-thin']] <- unscii_8_thin
+bitmaps[['unscii-16']]     <- unscii_16
 
 
 usethis::use_data(
-  bdfs,
+  bitmaps,
   arcade,
   gridfont, gridfont_smooth,
   internal = TRUE, overwrite = TRUE, compress = 'bzip2'
@@ -27,7 +25,7 @@ usethis::use_data(
 bdf_names
 
 font_info <- list()
-font_info$bitmap <- lapply(bdfs, function(bdf) {
+font_info$bitmap <- lapply(bitmaps, function(bdf) {
   cp <- which(!is.na(bdf$idx)) - 1L
   list(codepoints = sort(cp))
 })

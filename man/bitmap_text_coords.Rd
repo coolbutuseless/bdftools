@@ -9,7 +9,7 @@ bitmap_text_coords(text, font = "unifont", line_height = NULL)
 \arguments{
 \item{text}{text}
 
-\item{font}{bdf font name}
+\item{font}{bitmap font name}
 
 \item{line_height}{height}
 }

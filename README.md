@@ -32,8 +32,8 @@ BDF bitmap fonts.
 | Bitmap | Creep2 | 11x11 ?? | Some | 508 |
 | Bitmap | Spleen | 5x8, 6x12, 8x16, 12x24, 16x32 | Some | 450-1000 |
 | Bitmap | Unifont | 16x16 | Yes! | 57086 |
-| Vector | gridfont |  | ASCII only |  |
-| Vector | gridfont_smooth |  | ASCII only |  |
+| Vector | gridfont |  | Lower ASCII only |  |
+| Vector | gridfont_smooth |  | Lower ASCII only |  |
 | Vector | arcade |  | Upper case ASCII only |  |
 
 Bitmap fonts:
@@ -92,19 +92,20 @@ bitmap_text_raster(txt, "unifont") |>
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
 ``` r
-coords <- bitmap_text_coords("Hello\n#RStats!", "creep2-11")
+library(grid)
+coords <- bitmap_text_coords("Helljq\n#RSta!!!", "unscii-16")
 head(coords)
 ```
 
     # A tibble: 6 × 5
           x     y    x0    y0   idx
       <dbl> <dbl> <int> <int> <int>
-    1     4    18     4     7     1
-    2     1    18     1     7     1
-    3     4    17     4     6     1
-    4     1    17     1     6     1
-    5     4    16     4     5     1
-    6     3    16     3     5     1
+    1     2    20     2     4     1
+    2     3    20     3     4     1
+    3     6    20     6     4     1
+    4     7    20     7     4     1
+    5     2    21     2     5     1
+    6     3    21     3     5     1
 
 ``` r
 grid.newpage()
@@ -125,13 +126,10 @@ library(bdftools)
 
 txt <- "привет"
 txt <- "二項分布\xF0\x9F\x8E\xB2の英語表記は「Binomial distribution」である。"
-txt <- "a b c"
+# txt <- "Hello"
 plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "unifont")
-plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "spleen-32x64")
-plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "spleen-32x64")
-
-# plot_df <- as.data.frame(bdftools:::bdfs$cozette)
-# plot_df <- plot_df[plot_df$encoding >= utf8ToInt('A') & plot_df$encoding <= utf8ToInt('|'),]
+# plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "spleen-32x64")
+# plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "unscii-16")
 
 ggplot(plot_df) +
   geom_tile(aes(x0, y0), width=0.9, height = 0.9, na.rm = TRUE) +
@@ -203,11 +201,29 @@ vector_text_matrix('Hello', font = 'gridfont', scale = 1)
     #> [7,]     0     1     1     0
 
 ``` r
-ras <- vector_text_raster('Hello', font = 'gridfont', scale = 10)
+ras <- vector_text_raster('Hello\n#RStats!', font = 'gridfont_smooth', scale = 15)
 plot(ras, interpolate = FALSE)
 ```
 
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+
+## Font Sheets
+
+``` r
+lo <- utf8ToInt('!')
+hi <- utf8ToInt('z')
+txt <- intToUtf8(seq(lo, hi))
+
+coords <- bitmap_text_coords(txt, "spleen-6x12")
+
+ggplot(coords) +
+  geom_tile(aes(x0, y0), width=0.9, height = 0.9, na.rm = TRUE) +
+  facet_wrap(~idx, ncol = 12)+
+  theme_void(10) +
+  coord_equal()
+```
+
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
 ## BDF Bitmap Font Resources
 

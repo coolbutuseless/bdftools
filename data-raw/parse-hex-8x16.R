@@ -69,7 +69,10 @@ read_hex_8x16 <- function(hex_file) {
   
   list(
     chars = chars, 
-    idx   = idx
+    idx   = idx,
+    font_info = list(
+      line_height = 16L
+    )
   )
   
 }

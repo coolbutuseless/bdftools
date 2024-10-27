@@ -58,8 +58,8 @@ read_bdf <- function(filename) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   chars <- lapply(char_chunks, parse_char, height = font_info$size)
 
-  char_names <- vapply(chars, function(x) x$desc, character(1))
-  names(chars) <- char_names
+  # char_names <- vapply(chars, function(x) x$desc, character(1))
+  # names(chars) <- char_names
 
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -93,7 +93,7 @@ read_bdf <- function(filename) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   res <- list(
     font_info     = font_info,
-    font_info_raw = chunks[[1]],
+    # font_info_raw = chunks[[1]],
     chars         = chars,
     idx           = idx
   )
@@ -102,7 +102,7 @@ read_bdf <- function(filename) {
   # Make this of class 'bdf' so I can make use of S3 print.bdf() for
   # compact/informative output
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  class(res) <- 'bdf'
+  # class(res) <- 'bdf'
   res
 }
 
@@ -253,19 +253,19 @@ parse_char <- function(txt, height) {
   # This characters definition
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   res <- list(
-    desc     = substr(txt[1], start = 11, stop = nchar(txt[1])),
+    # desc     = substr(txt[1], start = 11, stop = nchar(txt[1])),
     # bitmap   = bitmap_ints,
     coords   = coords,
     encoding = encoding,
-    dwidth   = dwidth,
-    bbox     = bbox
+    dwidth   = dwidth#,
+    # bbox     = bbox
     # raw      = txt
   )
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Finalise and return
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  class(res) <- 'bdf_char'
+  # class(res) <- 'bdf_char'
   res
 }
 

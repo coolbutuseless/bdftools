@@ -9,7 +9,7 @@ bitmap_text_matrix(text, font = "unifont", scale = 1, line_height = NULL)
 \arguments{
 \item{text}{text}
 
-\item{font}{bdf font name}
+\item{font}{bitmap font name}
 
 \item{scale}{Integer size scale factor. Default: 1.  Must be an integer value >= 1.
 Scale up the matrix or raster result by this factor}

@@ -97,7 +97,8 @@ bitmap_text_raster(txt, "unifont") |>
 
 
 ```{r comment='', fig.height = 3}
-coords <- bitmap_text_coords("Hello\n#RStats!", "creep2-11")
+library(grid)
+coords <- bitmap_text_coords("Helljq\n#RSta!!!", "unscii-16")
 head(coords)
 
 grid.newpage()
@@ -119,13 +120,10 @@ library(bdftools)
 
 txt <- "привет"
 txt <- "二項分布\xF0\x9F\x8E\xB2の英語表記は「Binomial distribution」である。"
-txt <- "Hello"
+# txt <- "Hello"
 plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "unifont")
-plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "spleen-32x64")
-plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "unscii-16")
-
-# plot_df <- as.data.frame(bdftools:::bdfs$cozette)
-# plot_df <- plot_df[plot_df$encoding >= utf8ToInt('A') & plot_df$encoding <= utf8ToInt('|'),]
+# plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "spleen-32x64")
+# plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "unscii-16")
 
 ggplot(plot_df) +
   geom_tile(aes(x0, y0), width=0.9, height = 0.9, na.rm = TRUE) +
@@ -143,7 +141,7 @@ df
 
 vector_text_matrix('Hello', font = 'gridfont', scale = 1)
 
-ras <- vector_text_raster('Hello\n#RStats!', font = 'gridfont_smooth', scale = 30)
+ras <- vector_text_raster('Hello\n#RStats!', font = 'gridfont_smooth', scale = 15)
 plot(ras, interpolate = FALSE)
 ```
 

@@ -7,20 +7,11 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 "font_info"
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Bitmap font names
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bitmap_fonts <- c(
-  "unifont",
-  "cozette", 
-  "creep2-11", 
-  "spleen-5x8", "spleen-6x12", "spleen-8x16", "spleen-12x24", "spleen-16x32", "spleen-32x64"
-)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create a data.frame of the given string and font
 #'
-#' @param font bdf font name
+#' @param font bitmap font name
 #' @param text text
 #' @param line_height height
 #'
@@ -30,15 +21,15 @@ bitmap_fonts <- c(
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 bitmap_text_coords <- function(text, font = "unifont", line_height = NULL) {
   
-  if (!font %in% names(bdfs)) {
-    stop("No such bdf font: ", font)
+  if (!font %in% names(bitmaps)) {
+    stop("No such bitmap font: ", font)
   }
-  bdf <- bdfs[[font]]
+  bitmap <- bitmaps[[font]]
   
   codes <- utf8ToInt(text)
   dfs   <- vector('list', length(codes))
 
-  line_height <- line_height %||% bdf$font_info$line_height
+  line_height <- line_height %||% bitmap$font_info$line_height
   yoffset     <- 0
   xoffset     <- 0
 
@@ -58,21 +49,18 @@ bitmap_text_coords <- function(text, font = "unifont", line_height = NULL) {
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get the character data for the given utf8 code
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    idx <- bdf$idx[code + 1L]
-    if (is.null(idx) || is.na(idx) || idx > length(bdf$chars)) {
-      code <- bdf$font_info$default_char %||% 63 # Default to question mark
-      idx <- bdf$idx[code + 1L]
+    idx <- bitmap$idx[code + 1L]
+    if (is.null(idx) || is.na(idx) || idx > length(bitmap$chars)) {
+      code <- bitmap$font_info$default_char %||% 63 # Default to question mark
+      idx <- bitmap$idx[code + 1L]
     }
-    
-    # cat("idx / len = ", idx, length(bdf$chars), idx > length(bdf$chars), "\n")
-    # cat("def: ", bdf$font_info$default_char, "\n")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get this character
     # Offset the x,y coords based upon the position of the character
     # add the coords data.frame to the list of all data.frames
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    this_bdf_char <- bdf$chars[[idx]]
+    this_bdf_char <- bitmap$chars[[idx]]
     this_df      <- this_bdf_char$coords
     this_df$x0   <- this_df$x
     this_df$y0   <- this_df$y
@@ -180,7 +168,7 @@ bitmap_text_matrix <- function(text, font = "unifont", scale = 1, line_height = 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create a raster
 #' 
-#' @inheritParams bitmap_text_coords
+#' @inheritParams bitmap_text_matrix
 #' 
 #' @return raster
 #' @importFrom grDevices as.raster
