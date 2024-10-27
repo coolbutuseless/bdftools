@@ -2,7 +2,8 @@
 source("data-raw/parse-arcade.R")
 source("data-raw/parse-bdfs.R")
 source("data-raw/parse-gridfont.R")
-source("data-raw/parse-hex.R")
+source("data-raw/parse-hex-8x8.R")
+source("data-raw/parse-hex-8x16.R")
 
 
 # usethis::use_data(bdfs, overwrite = TRUE, internal = TRUE, compress = 'bzip2')
