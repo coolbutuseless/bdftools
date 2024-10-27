@@ -30,6 +30,28 @@ hex8_to_coords <- function(hex) {
 
 
 
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Convert 8 byte hex to a data.frame of coordinates
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+hex8_to_coords <- function(hex) {
+  hex <- stringr::str_sub(hex, seq(1, 15, 2), seq(2, 16, 2))
+  coords <- lapply(8:1, \(i) {
+    x <- xs[[hex[[i]]]]
+    if (length(x) == 0) {
+      data.frame(x = integer(0), y = integer(0))
+    } else {
+      data.frame(x = x, y = 9L - i)
+    }
+  }) 
+  char_coords <- do.call(rbind, coords)
+  char_coords
+}
+
+
+
+
+
 read_hex8 <- function(hex_file) {
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -70,5 +92,35 @@ read_hex8 <- function(hex_file) {
 }
 
 
-unscii_8_thin <- read_hex8("data-raw/unscii/unscii-8-thin.hex")
+
+
+hex8_files <- list.files("data-raw/unscii/", pattern = "unscii-8", full.names = TRUE)
+hex8_names <- basename(hex8_files) |> tools::file_path_sans_ext()
+
+
+
+
+
+unscii_8         <- read_hex8("data-raw/unscii/unscii-8.hex")
+unscii_8_alt     <- read_hex8("data-raw/unscii/unscii-8-alt.hex")
+unscii_8_fantasy <- read_hex8("data-raw/unscii/unscii-8-fantasy.hex")
+unscii_8_mcr     <- read_hex8("data-raw/unscii/unscii-8-mcr.hex")
+unscii_8_tall    <- read_hex8("data-raw/unscii/unscii-8-tall.hex")
+unscii_8_thin    <- read_hex8("data-raw/unscii/unscii-8-thin.hex")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
