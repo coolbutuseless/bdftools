@@ -7,9 +7,10 @@ source("data-raw/parse-hex-8x16.R")
 
 
 
-bitmaps[['unscii-8']]      <- unscii_8
-bitmaps[['unscii-8-thin']] <- unscii_8_thin
-bitmaps[['unscii-16']]     <- unscii_16
+bitmaps[['unscii-8']]       <- unscii_8
+bitmaps[['unscii-8-thin']]  <- unscii_8_thin
+bitmaps[['unscii-16']]      <- unscii_16
+# bitmaps[['unscii-16']]      <- unscii_16_full
 
 
 usethis::use_data(

@@ -122,8 +122,8 @@ txt <- "привет"
 txt <- "二項分布\xF0\x9F\x8E\xB2の英語表記は「Binomial distribution」である。"
 # txt <- "Hello"
 plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "unifont")
-# plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "spleen-32x64")
-# plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "unscii-16")
+plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "spleen-32x64")
+plot_df <- bitmap_text_coords(paste(txt, collapse = ""), "unscii-16")
 
 ggplot(plot_df) +
   geom_tile(aes(x0, y0), width=0.9, height = 0.9, na.rm = TRUE) +

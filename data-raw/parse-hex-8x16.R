@@ -62,7 +62,9 @@ read_hex_8x16 <- function(hex_file) {
   codes <- vapply(hex_raw, \(x) x[1], character(1))
   codes <- strtoi(codes, base = 16)
   
+  # print(codes)
   max_code <- max(codes)
+  # print(max_code)
   idx <- rep(NA_integer_, max_code+1L)
   
   idx[codes + 1] <- seq_along(codes)
@@ -80,14 +82,11 @@ read_hex_8x16 <- function(hex_file) {
 
 
 
-# hex16_files <- list.files("data-raw/unscii/", pattern = "unscii-16", full.names = TRUE)
-# hex16_names <- basename(hex16_files) |> tools::file_path_sans_ext()
-
-
-
 hex_file <- "data-raw/unscii/unscii-16.hex"
-
 unscii_16 <- read_hex_8x16(hex_file)
+
+# hex_file       <- "data-raw/unscii/unscii-16-full.hex"
+# unscii_16_full <- read_hex_8x16(hex_file)
 
 
 
